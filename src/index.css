@@ -1,68 +1,288 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   THEME VARIABLES
+   ============================================ */
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  /* Dark theme (default) */
+  --bg-primary: #000000;
+  --bg-secondary: #0f172a;
+  --bg-tertiary: #1e293b;
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --border-color: #334155;
+  --border-light: rgba(255, 255, 255, 0.1);
+  --accent-purple: #a855f7;
+  --accent-pink: #ec4899;
+  --accent-indigo: #6366f1;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
+.light {
+  /* Light theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-tertiary: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-color: #e2e8f0;
+  --border-light: rgba(0, 0, 0, 0.1);
+  --accent-purple: #9333ea;
+  --accent-pink: #db2777;
+  --accent-indigo: #4f46e5;
 }
-a:hover {
-  color: #535bf2;
+
+/* ============================================
+   ACCESSIBILITY & FOCUS STYLES
+   ============================================ */
+
+/* High-contrast focus indicator for keyboard navigation */
+*:focus-visible {
+  outline: 2px solid #a855f7;
+  outline-offset: 2px;
+  border-radius: 4px;
 }
+
+/* Remove default focus styles for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Ensure interactive elements are keyboard accessible */
+button,
+a,
+input,
+select,
+textarea {
+  transition: all 0.2s ease;
+}
+
+/* Skip to main content link for screen readers */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #a855f7;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  z-index: 100;
+  border-radius: 0 0 4px 0;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor;
+  }
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  background: #000000;
+  background-attachment: fixed;
+  color: #e2e8f0;
+  overflow-x: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Text Selection Styling */
+::selection {
+  background: #a855f7;
+  color: #ffffff;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+::-moz-selection {
+  background: #a855f7;
+  color: #ffffff;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
+/* Input Selection Styling */
+input::selection,
+textarea::selection,
+select::selection {
+  background: #a855f7;
+  color: #ffffff;
+}
+
+input::-moz-selection,
+textarea::-moz-selection,
+select::-moz-selection {
+  background: #a855f7;
+  color: #ffffff;
+}
+
+/* Ensure minimum touch target size (44x44px) for mobile */
+@media (max-width: 768px) {
+  button,
+  a {
+    min-height: 44px;
+    min-width: 44px;
   }
-  a:hover {
-    color: #747bff;
+}
+
+.glass-panel {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.glass-panel-dark {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+}
+
+.gradient-text {
+  background: linear-gradient(to right, #000000, #1a0a2e);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-bg-purple {
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #0a0012 25%,
+    #1a0a2e 50%,
+    #0a0012 75%,
+    #000000 100%
+  );
+}
+
+/* Skeleton Loading Animation */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
   }
-  button {
-    background-color: #f9f9f9;
+  50% {
+    opacity: 0.5;
   }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+/* Select/Dropdown Styling */
+select {
+  color: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+select option {
+  background: #000000;
+  color: #ffffff;
+  padding: 8px;
+}
+
+select option:hover {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+select option:checked,
+select option:focus {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+select option[selected] {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+select:focus option:checked {
+  background: #7c3aed !important;
+  color: #ffffff !important;
+}
+
+/* Webkit-specific dropdown styling */
+select::-webkit-scrollbar {
+  width: 8px;
+}
+
+select::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+select::-webkit-scrollbar-thumb {
+  background: #a855f7;
+  border-radius: 4px;
+}
+
+/* Force override for focused/selected options */
+select[data-value]:focus option[value]:checked {
+  background: #7c3aed !important;
+  box-shadow: 0 0 10px #7c3aed !important;
+}
+
+/* Improve input field text visibility */
+input[type='text'],
+input[type='email'],
+input[type='password'],
+textarea {
+  color: #ffffff;
+  caret-color: #a855f7;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #64748b;
+}
+
+input:autofill,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff;
+  -webkit-box-shadow: 0 0 0px 1000px rgba(15, 23, 42, 0.8) inset;
+  transition: background-color 5000s ease-in-out 0s;
 }
