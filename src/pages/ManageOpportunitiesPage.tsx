@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Search, Edit, Trash2, Plus, Building, MapPin, Calendar, 
-  AlertCircle
-} from 'lucide-react';
+import { Search, Edit, Trash2, Plus, Building, MapPin, Calendar, AlertCircle } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -28,7 +25,7 @@ const ManageOpportunitiesPage: React.FC = () => {
   const { user } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
-  
+
   const [opportunities, setOpportunities] = useState<Opportunity[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -67,16 +64,17 @@ const ManageOpportunitiesPage: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    if (!window.confirm('Are you sure you want to delete this opportunity? This action cannot be undone.')) {
+    if (
+      !window.confirm(
+        'Are you sure you want to delete this opportunity? This action cannot be undone.'
+      )
+    ) {
       return;
     }
 
     try {
       setDeleteLoading(id);
-      const { error } = await supabase
-        .from('opportunities')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabase.from('opportunities').delete().eq('id', id);
 
       if (error) throw error;
 
@@ -90,17 +88,22 @@ const ManageOpportunitiesPage: React.FC = () => {
     }
   };
 
-  const filteredOpportunities = opportunities.filter(op => 
-    op.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    op.company_name.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredOpportunities = opportunities.filter(
+    op =>
+      op.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      op.company_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'active': return 'text-green-600 bg-green-100';
-      case 'closed': return 'text-red-600 bg-red-100';
-      case 'draft': return 'text-yellow-600 bg-yellow-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'active':
+        return 'text-green-600 bg-green-100';
+      case 'closed':
+        return 'text-red-600 bg-red-100';
+      case 'draft':
+        return 'text-yellow-600 bg-yellow-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
     }
   };
 
@@ -110,7 +113,9 @@ const ManageOpportunitiesPage: React.FC = () => {
         <div className="relative z-10 max-w-[1800px] mx-auto px-4 md:px-8">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
-              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">Manage Opportunities</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
+                Manage Opportunities
+              </h1>
               <p className="text-slate-400 text-lg">View and manage your posted job listings</p>
             </div>
             <Link
@@ -130,7 +135,7 @@ const ManageOpportunitiesPage: React.FC = () => {
                 type="text"
                 placeholder="Search by title or company..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
               />
             </div>
@@ -148,12 +153,14 @@ const ManageOpportunitiesPage: React.FC = () => {
               </div>
               <h3 className="text-xl font-bold text-white mb-2">No opportunities found</h3>
               <p className="text-slate-400">
-                {searchQuery ? 'Try adjusting your search terms' : 'Get started by posting your first opportunity'}
+                {searchQuery
+                  ? 'Try adjusting your search terms'
+                  : 'Get started by posting your first opportunity'}
               </p>
             </div>
           ) : (
             <div className="grid gap-4">
-              {filteredOpportunities.map((opportunity) => (
+              {filteredOpportunities.map(opportunity => (
                 <motion.div
                   key={opportunity.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -172,15 +179,19 @@ const ManageOpportunitiesPage: React.FC = () => {
                             <span>{opportunity.location}</span>
                           </div>
                         </div>
-                        <span className={`px-3 py-1 rounded-full text-xs font-bold border ${
-                          opportunity.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' :
-                          opportunity.status === 'CLOSED' ? 'bg-rose-500/10 text-rose-400 border-rose-500/20' :
-                          'bg-amber-500/10 text-amber-400 border-amber-500/20'
-                        }`}>
-                          {opportunity.status}
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-bold border ${
+                            opportunity.status === 'active'
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                              : opportunity.status === 'closed'
+                                ? 'bg-rose-500/10 text-rose-400 border-rose-500/20'
+                                : 'bg-amber-500/10 text-amber-400 border-amber-500/20'
+                          }`}
+                        >
+                          {opportunity.status.toUpperCase()}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center gap-4 text-sm text-slate-500 mt-4">
                         <div className="flex items-center">
                           <Calendar className="w-4 h-4 mr-1" />
@@ -188,7 +199,10 @@ const ManageOpportunitiesPage: React.FC = () => {
                         </div>
                         <div className="flex items-center">
                           <AlertCircle className="w-4 h-4 mr-1" />
-                          Deadline: {opportunity.deadline ? new Date(opportunity.deadline).toLocaleDateString() : 'No deadline'}
+                          Deadline:{' '}
+                          {opportunity.deadline
+                            ? new Date(opportunity.deadline).toLocaleDateString()
+                            : 'No deadline'}
                         </div>
                         <div className="flex items-center">
                           <span className="capitalize bg-white/5 px-2 py-0.5 rounded text-slate-400 border border-white/10">

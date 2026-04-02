@@ -1,8 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Search, Filter, MapPin, DollarSign, Briefcase, 
-  Building, Clock, ChevronRight, Zap, Star, AlertCircle, Lightbulb
+import {
+  Search,
+  Filter,
+  MapPin,
+  DollarSign,
+  Briefcase,
+  Building,
+  Clock,
+  ChevronRight,
+  Zap,
+  Star,
+  AlertCircle,
+  Lightbulb,
 } from 'lucide-react';
 import { api } from '../services/api';
 import { useAuth } from '../contexts/AuthContext';
@@ -10,6 +20,7 @@ import PageTransition from '../components/common/PageTransition';
 import { useDebounce } from '../hooks/useDebounce';
 import { LoadingGrid } from '../components/common/LoadingSkeleton';
 import { useToast } from '../contexts/ToastContext';
+import { supabase } from '../services/supabaseClient';
 
 const OpportunitiesPage: React.FC = () => {
   const { user } = useAuth();
@@ -20,7 +31,7 @@ const OpportunitiesPage: React.FC = () => {
     search: '',
     type: '',
     location: '',
-    minStipend: 0
+    minStipend: 0,
   });
 
   const debouncedSearch = useDebounce(filters.search, 300);
@@ -29,6 +40,18 @@ const OpportunitiesPage: React.FC = () => {
     if (user?.id) {
       fetchOpportunities();
     }
+
+    // Subscribe to realtime opportunities updates
+    const channel = supabase
+      .channel('public:opportunities')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'opportunities' }, () => {
+        fetchOpportunities();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user?.id, debouncedSearch, filters.type, filters.location, filters.minStipend]);
 
   const fetchOpportunities = async () => {
@@ -38,7 +61,7 @@ const OpportunitiesPage: React.FC = () => {
         search: debouncedSearch,
         type: filters.type as any,
         location: filters.location,
-        minStipend: filters.minStipend
+        minStipend: filters.minStipend,
       });
       setOpportunities(data || []);
     } catch (error) {
@@ -60,10 +83,12 @@ const OpportunitiesPage: React.FC = () => {
       // Apply internally through the system
       await api.applyToOpportunity(opp.id, user.id);
       showToast('success', 'Application submitted successfully!');
-      
+
       // If external URL exists, optionally open it
       if (opp?.application_url) {
-        const shouldOpenExternal = window.confirm('Application submitted! Would you also like to visit the external application page?');
+        const shouldOpenExternal = window.confirm(
+          'Application submitted! Would you also like to visit the external application page?'
+        );
         if (shouldOpenExternal) {
           window.open(opp.application_url, '_blank', 'noopener,noreferrer');
         }
@@ -82,14 +107,14 @@ const OpportunitiesPage: React.FC = () => {
     if (!user || !user.skills) return 0;
     const requiredSkills = opp.required_skills || [];
     if (requiredSkills.length === 0) return 100;
-    
+
     const userSkillNames = user.skills
       .filter((s: any) => s && s.name)
       .map((s: any) => s.name.toLowerCase());
-    const matchCount = requiredSkills
-      .filter((s: any) => s && s.name && userSkillNames.includes(s.name.toLowerCase()))
-      .length;
-    
+    const matchCount = requiredSkills.filter(
+      (s: any) => s && s.name && userSkillNames.includes(s.name.toLowerCase())
+    ).length;
+
     return Math.round((matchCount / requiredSkills.length) * 100);
   };
 
@@ -99,43 +124,45 @@ const OpportunitiesPage: React.FC = () => {
 
     const reasons: string[] = [];
     const suggestions: string[] = [];
-    
+
     // Check CGPA
     const avgCgpaRequired = 7.0; // You might want to calculate this from actual opportunities
     if (user.cgpa && user.cgpa < avgCgpaRequired) {
-      reasons.push(`Your CGPA (${user.cgpa}) may be below typical requirements (≥ ${avgCgpaRequired})`);
+      reasons.push(
+        `Your CGPA (${user.cgpa}) may be below typical requirements (≥ ${avgCgpaRequired})`
+      );
       suggestions.push('Focus on improving your academic performance');
     }
-    
+
     // Check skills
     if (!user.skills || user.skills.length < 3) {
       reasons.push('Limited skills listed in your profile');
       suggestions.push('Add more relevant technical and soft skills to your profile');
     }
-    
+
     // Check filters
     if (filters.minStipend > 0) {
       reasons.push(`Minimum stipend filter set to ₹${filters.minStipend.toLocaleString()}`);
       suggestions.push('Try lowering your minimum stipend expectation');
     }
-    
+
     if (filters.location) {
       reasons.push(`Location filter active: "${filters.location}"`);
       suggestions.push('Try searching for remote opportunities or different locations');
     }
-    
+
     if (filters.type) {
       reasons.push(`Opportunity type filter: ${filters.type}`);
       suggestions.push('Consider both internships and placements');
     }
-    
+
     // If no specific reason found
     if (reasons.length === 0) {
       reasons.push('No opportunities currently match your profile and preferences');
       suggestions.push('Check back later for new opportunities');
       suggestions.push('Consider broadening your search criteria');
     }
-    
+
     return { reasons, suggestions };
   };
 
@@ -151,7 +178,7 @@ const OpportunitiesPage: React.FC = () => {
               x: [0, 100, 0],
               y: [0, -50, 0],
             }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute top-0 right-0 w-[800px] h-[800px] bg-purple-500/30 rounded-full blur-[150px]"
           />
           <motion.div
@@ -161,7 +188,7 @@ const OpportunitiesPage: React.FC = () => {
               x: [0, -100, 0],
               y: [0, 100, 0],
             }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-indigo-500/30 rounded-full blur-[150px]"
           />
         </div>
@@ -185,21 +212,21 @@ const OpportunitiesPage: React.FC = () => {
               {/* Search */}
               <div className="md:col-span-5 relative">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                <input 
-                  type="text" 
-                  placeholder="Search by role, company, or skills..." 
+                <input
+                  type="text"
+                  placeholder="Search by role, company, or skills..."
                   className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
                   value={filters.search}
-                  onChange={(e) => setFilters({...filters, search: e.target.value})}
+                  onChange={e => setFilters({ ...filters, search: e.target.value })}
                 />
               </div>
 
               {/* Type Filter */}
               <div className="md:col-span-2">
-                <select 
+                <select
                   className="w-full bg-black/40 border border-white/10 rounded-xl py-3 px-4 text-white focus:border-purple-500/50 focus:outline-none appearance-none cursor-pointer"
                   value={filters.type}
-                  onChange={(e) => setFilters({...filters, type: e.target.value})}
+                  onChange={e => setFilters({ ...filters, type: e.target.value })}
                 >
                   <option value="">All Types</option>
                   <option value="INTERNSHIP">Internship</option>
@@ -210,24 +237,24 @@ const OpportunitiesPage: React.FC = () => {
               {/* Location Filter */}
               <div className="md:col-span-3 relative">
                 <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                <input 
-                  type="text" 
+                <input
+                  type="text"
                   placeholder="Location"
                   className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
                   value={filters.location}
-                  onChange={(e) => setFilters({...filters, location: e.target.value})}
+                  onChange={e => setFilters({ ...filters, location: e.target.value })}
                 />
               </div>
 
               {/* Min Stipend */}
               <div className="md:col-span-2 relative">
                 <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-                <input 
-                  type="number" 
+                <input
+                  type="number"
                   placeholder="Min Stipend"
                   className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-12 pr-4 text-white focus:border-purple-500/50 focus:outline-none placeholder:text-slate-500 transition-colors"
                   value={filters.minStipend || ''}
-                  onChange={(e) => setFilters({...filters, minStipend: Number(e.target.value)})}
+                  onChange={e => setFilters({ ...filters, minStipend: Number(e.target.value) })}
                 />
               </div>
             </div>
@@ -237,7 +264,7 @@ const OpportunitiesPage: React.FC = () => {
           {loading ? (
             <LoadingGrid count={6} type="card" />
           ) : opportunities.length === 0 ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               className="text-center py-12 glass-panel rounded-2xl border border-white/10"
@@ -247,7 +274,7 @@ const OpportunitiesPage: React.FC = () => {
                   <Briefcase className="w-10 h-10 text-slate-500" />
                 </div>
                 <h3 className="text-2xl font-bold text-white mb-3">No Opportunities Found</h3>
-                
+
                 {(() => {
                   const analysis = analyzeNoMatchReasons();
                   return analysis ? (
@@ -267,7 +294,7 @@ const OpportunitiesPage: React.FC = () => {
                           ))}
                         </ul>
                       </div>
-                      
+
                       {/* Suggestions */}
                       <div className="p-5 bg-green-500/10 border border-green-500/20 rounded-xl">
                         <h4 className="font-semibold text-green-400 mb-3 flex items-center gap-2">
@@ -283,11 +310,13 @@ const OpportunitiesPage: React.FC = () => {
                           ))}
                         </ul>
                       </div>
-                      
+
                       {/* Action Buttons */}
                       <div className="flex gap-3 justify-center mt-6">
                         <button
-                          onClick={() => setFilters({ search: '', type: '', location: '', minStipend: 0 })}
+                          onClick={() =>
+                            setFilters({ search: '', type: '', location: '', minStipend: 0 })
+                          }
                           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 rounded-lg text-white font-semibold transition-colors"
                         >
                           Clear All Filters
@@ -295,7 +324,9 @@ const OpportunitiesPage: React.FC = () => {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-slate-400">Try adjusting your filters to find what you're looking for.</p>
+                    <p className="text-slate-400">
+                      Try adjusting your filters to find what you&apos;re looking for.
+                    </p>
                   );
                 })()}
               </div>
@@ -316,7 +347,6 @@ const OpportunitiesPage: React.FC = () => {
                     >
                       <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500/20 to-indigo-500/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
                       <div className="relative glass-panel p-6 rounded-2xl h-full flex flex-col border border-white/10 hover:border-purple-500/30 transition-colors">
-                        
                         {/* Card Header */}
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex items-center gap-3">
@@ -331,11 +361,15 @@ const OpportunitiesPage: React.FC = () => {
                             </div>
                           </div>
                           {matchScore > 0 && (
-                            <div className={`px-2 py-1 rounded-lg text-xs font-bold border ${
-                              matchScore >= 80 ? 'bg-green-500/10 text-green-400 border-green-500/20' :
-                              matchScore >= 50 ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20' :
-                              'bg-red-500/10 text-red-400 border-red-500/20'
-                            }`}>
+                            <div
+                              className={`px-2 py-1 rounded-lg text-xs font-bold border ${
+                                matchScore >= 80
+                                  ? 'bg-green-500/10 text-green-400 border-green-500/20'
+                                  : matchScore >= 50
+                                    ? 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                                    : 'bg-red-500/10 text-red-400 border-red-500/20'
+                              }`}
+                            >
                               {matchScore}% Match
                             </div>
                           )}
@@ -343,19 +377,22 @@ const OpportunitiesPage: React.FC = () => {
 
                         {/* Tags */}
                         <div className="flex flex-wrap gap-2 mb-4">
-                          <span className={`px-2.5 py-1 rounded-md text-xs font-medium border ${
-                            opp.type === 'INTERNSHIP' 
-                              ? 'bg-purple-500/10 text-purple-400 border-purple-500/20' 
-                              : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
-                          }`}>
+                          <span
+                            className={`px-2.5 py-1 rounded-md text-xs font-medium border ${
+                              opp.type === 'INTERNSHIP'
+                                ? 'bg-purple-500/10 text-purple-400 border-purple-500/20'
+                                : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20'
+                            }`}
+                          >
                             {opp.type}
                           </span>
                           <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/5 text-slate-300 border border-white/10 flex items-center gap-1">
                             <MapPin className="w-3 h-3" /> {opp.location || 'Remote'}
                           </span>
                           <span className="px-2.5 py-1 rounded-md text-xs font-medium bg-white/5 text-slate-300 border border-white/10 flex items-center gap-1">
-                            <Zap className="w-3 h-3 text-yellow-400" /> 
-                            ₹{opp.stipend_min?.toLocaleString()} - {opp.stipend_max?.toLocaleString()}
+                            <Zap className="w-3 h-3 text-yellow-400" />₹
+                            {opp.stipend_min?.toLocaleString()} -{' '}
+                            {opp.stipend_max?.toLocaleString()}
                           </span>
                         </div>
 
@@ -370,7 +407,7 @@ const OpportunitiesPage: React.FC = () => {
                             <Clock className="w-3 h-3" />
                             Posted {new Date(opp.created_at).toLocaleDateString()}
                           </div>
-                          <button 
+                          <button
                             onClick={() => handleApplyClick(opp)}
                             className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white text-black font-bold text-sm hover:bg-purple-50 transition-colors"
                           >

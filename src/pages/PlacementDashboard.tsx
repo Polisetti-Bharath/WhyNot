@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Briefcase, Users, TrendingUp, Calendar, PlusCircle, 
-  Award, Building2, Target, ArrowRight, 
-  BarChart3, Activity, CheckCircle, Clock
+import {
+  Briefcase,
+  Users,
+  TrendingUp,
+  Calendar,
+  PlusCircle,
+  Award,
+  Building2,
+  Target,
+  ArrowRight,
+  BarChart3,
+  Activity,
+  CheckCircle,
+  Clock,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabaseClient';
@@ -18,7 +28,7 @@ const PlacementDashboard: React.FC = () => {
     totalApplications: 0,
     pendingApplications: 0,
     totalStudents: 0,
-    placedStudents: 0
+    placedStudents: 0,
   });
   const [loading, setLoading] = useState(true);
 
@@ -38,18 +48,21 @@ const PlacementDashboard: React.FC = () => {
 
       // Fetch applications for my opportunities
       const myOpportunityIds = opportunities?.map(o => o.id) || [];
-      
-      const { data: applications } = myOpportunityIds.length > 0
-        ? await supabase
-            .from('applications')
-            .select(`
+
+      const { data: applications } =
+        myOpportunityIds.length > 0
+          ? await supabase
+              .from('applications')
+              .select(
+                `
               *,
               opportunity:opportunities(title, posted_by),
               student:profiles!applications_student_id_fkey(name, email, avatar)
-            `)
-            .in('opportunity_id', myOpportunityIds)
-            .order('created_at', { ascending: false })
-        : { data: [] };
+            `
+              )
+              .in('opportunity_id', myOpportunityIds)
+              .order('created_at', { ascending: false })
+          : { data: [] };
 
       // Fetch student stats
       const { count: studentCount } = await supabase
@@ -64,11 +77,11 @@ const PlacementDashboard: React.FC = () => {
 
       setStats({
         totalOpportunities: opportunities?.length || 0,
-        activeOpportunities: opportunities?.filter(o => o.status === 'ACTIVE').length || 0,
+        activeOpportunities: opportunities?.filter(o => o.status === 'active').length || 0,
         totalApplications: applications?.length || 0,
         pendingApplications: applications?.filter(a => a.status === 'PENDING').length || 0,
         totalStudents: studentCount || 0,
-        placedStudents: placedCount || 0
+        placedStudents: placedCount || 0,
       });
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -78,38 +91,38 @@ const PlacementDashboard: React.FC = () => {
   };
 
   const statCards = [
-    { 
-      label: 'Active Jobs', 
-      value: stats.activeOpportunities, 
-      icon: Briefcase, 
+    {
+      label: 'Active Jobs',
+      value: stats.activeOpportunities,
+      icon: Briefcase,
       color: 'text-purple-400',
       gradient: 'from-purple-500 to-indigo-500',
-      change: `${stats.totalOpportunities} Total`
+      change: `${stats.totalOpportunities} Total`,
     },
-    { 
-      label: 'Total Students', 
-      value: stats.totalStudents, 
-      icon: Users, 
+    {
+      label: 'Total Students',
+      value: stats.totalStudents,
+      icon: Users,
       color: 'text-indigo-400',
       gradient: 'from-indigo-500 to-purple-500',
-      change: 'Registered'
+      change: 'Registered',
     },
-    { 
-      label: 'Students Placed', 
-      value: stats.placedStudents, 
-      icon: Award, 
+    {
+      label: 'Students Placed',
+      value: stats.placedStudents,
+      icon: Award,
       color: 'text-emerald-400',
       gradient: 'from-emerald-500 to-teal-500',
-      change: 'This Season'
+      change: 'This Season',
     },
-    { 
-      label: 'Placement Rate', 
-      value: `${stats.totalStudents > 0 ? Math.round((stats.placedStudents / stats.totalStudents) * 100) : 0}%`, 
-      icon: TrendingUp, 
+    {
+      label: 'Placement Rate',
+      value: `${stats.totalStudents > 0 ? Math.round((stats.placedStudents / stats.totalStudents) * 100) : 0}%`,
+      icon: TrendingUp,
       color: 'text-rose-400',
       gradient: 'from-rose-500 to-pink-500',
-      change: 'Success Rate'
-    }
+      change: 'Success Rate',
+    },
   ];
 
   return (
@@ -124,7 +137,7 @@ const PlacementDashboard: React.FC = () => {
               x: [0, 100, 0],
               y: [0, -50, 0],
             }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute top-0 right-0 w-[800px] h-[800px] bg-purple-500/30 rounded-full blur-[150px]"
           />
           <motion.div
@@ -134,7 +147,7 @@ const PlacementDashboard: React.FC = () => {
               x: [0, -100, 0],
               y: [0, 100, 0],
             }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-indigo-500/30 rounded-full blur-[150px]"
           />
         </div>
@@ -155,29 +168,37 @@ const PlacementDashboard: React.FC = () => {
                         className="inline-flex items-center gap-2 px-3 py-1 bg-purple-500/10 border border-purple-500/20 rounded-full mb-3"
                       >
                         <Activity className="w-4 h-4 text-purple-400" />
-                        <span className="text-xs font-semibold text-purple-300">Placement Officer</span>
+                        <span className="text-xs font-semibold text-purple-300">
+                          Placement Officer
+                        </span>
                       </motion.div>
-                      
+
                       <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
                         Welcome back, {user?.name || 'Officer'}!
                       </h1>
                       <p className="text-slate-400 text-lg mb-6">
                         Manage opportunities and drive successful placements
                       </p>
-                      
+
                       {/* Quick Stats Inline */}
                       <div className="flex flex-wrap gap-4">
                         <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl">
                           <Briefcase className="w-4 h-4 text-purple-400" />
-                          <span className="text-sm text-white font-semibold">{stats.activeOpportunities} Active Jobs</span>
+                          <span className="text-sm text-white font-semibold">
+                            {stats.activeOpportunities} Active Jobs
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl">
                           <Award className="w-4 h-4 text-emerald-400" />
-                          <span className="text-sm text-white font-semibold">{stats.placedStudents} Placed</span>
+                          <span className="text-sm text-white font-semibold">
+                            {stats.placedStudents} Placed
+                          </span>
                         </div>
                         <div className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl">
                           <Users className="w-4 h-4 text-indigo-400" />
-                          <span className="text-sm text-white font-semibold">{stats.totalStudents} Students</span>
+                          <span className="text-sm text-white font-semibold">
+                            {stats.totalStudents} Students
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -188,17 +209,14 @@ const PlacementDashboard: React.FC = () => {
 
             {/* Post Opportunity CTA - spans 4 columns */}
             <div className="col-span-12 md:col-span-4">
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                className="relative h-full group"
-              >
+              <motion.div whileHover={{ scale: 1.02 }} className="relative h-full group">
                 <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500 to-indigo-500 rounded-3xl opacity-30 group-hover:opacity-100 transition-opacity duration-500 blur-sm" />
                 <Link
                   to="/placement/post"
                   className="relative w-full h-full glass-panel rounded-3xl p-6 hover:border-transparent hover:bg-purple-500/5 transition-all overflow-hidden flex flex-col items-center justify-center text-center gap-4"
                 >
                   <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
-                  
+
                   <motion.div
                     animate={{
                       rotate: [0, 5, -5, 0],
@@ -211,7 +229,7 @@ const PlacementDashboard: React.FC = () => {
                       <PlusCircle className="w-8 h-8 text-purple-400" />
                     </div>
                   </motion.div>
-                  
+
                   <div>
                     <h3 className="text-xl font-bold text-white mb-1">Post Opportunity</h3>
                     <p className="text-sm text-slate-400">Create new job listing</p>
@@ -224,13 +242,12 @@ const PlacementDashboard: React.FC = () => {
           {/* Stats Grid */}
           <div className="grid grid-cols-12 gap-6">
             {statCards.map((stat, index) => (
-              <div
-                key={index}
-                className="col-span-12 md:col-span-3"
-              >
+              <div key={index} className="col-span-12 md:col-span-3">
                 <div className="relative group h-full">
-                  <div className={`absolute -inset-[1px] bg-gradient-to-br ${stat.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm`} />
-                  
+                  <div
+                    className={`absolute -inset-[1px] bg-gradient-to-br ${stat.gradient} rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-sm`}
+                  />
+
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -238,19 +255,27 @@ const PlacementDashboard: React.FC = () => {
                     className="relative glass-panel rounded-2xl p-6 h-full hover:-translate-y-1 transition-transform duration-300"
                   >
                     <div className="flex items-start justify-between mb-4">
-                      <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${stat.gradient} p-[1px]`}>
+                      <div
+                        className={`w-14 h-14 rounded-xl bg-gradient-to-br ${stat.gradient} p-[1px]`}
+                      >
                         <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
                           <stat.icon className={`w-7 h-7 ${stat.color}`} />
                         </div>
                       </div>
                       {stat.change && (
-                        <span className={`px-3 py-1 bg-black/40 border border-white/5 rounded-full text-xs font-semibold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}>
+                        <span
+                          className={`px-3 py-1 bg-black/40 border border-white/5 rounded-full text-xs font-semibold bg-gradient-to-r ${stat.gradient} bg-clip-text text-transparent`}
+                        >
                           {stat.change}
                         </span>
                       )}
                     </div>
-                    <p className="text-slate-400 text-sm mb-2 font-medium uppercase tracking-wide">{stat.label}</p>
-                    <p className="text-3xl font-black text-white">{typeof stat.value === 'number' ? stat.value : stat.value}</p>
+                    <p className="text-slate-400 text-sm mb-2 font-medium uppercase tracking-wide">
+                      {stat.label}
+                    </p>
+                    <p className="text-3xl font-black text-white">
+                      {typeof stat.value === 'number' ? stat.value : stat.value}
+                    </p>
                   </motion.div>
                 </div>
               </div>
@@ -262,10 +287,7 @@ const PlacementDashboard: React.FC = () => {
             {/* Manage Opportunities */}
             <div className="col-span-12 md:col-span-6 lg:col-span-4">
               <Link to="/placement/opportunities">
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="relative group h-full"
-                >
+                <motion.div whileHover={{ y: -4 }} className="relative group h-full">
                   <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
                   <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-purple-500/30 transition-all">
                     <div className="flex items-start gap-4">
@@ -276,9 +298,12 @@ const PlacementDashboard: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-white mb-1">Manage Opportunities</h3>
-                        <p className="text-sm text-slate-400 mb-3">View, edit and track all job postings</p>
+                        <p className="text-sm text-slate-400 mb-3">
+                          View, edit and track all job postings
+                        </p>
                         <div className="flex items-center text-sm text-purple-400 font-semibold">
-                          View All <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          View All{' '}
+                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </div>
@@ -290,10 +315,7 @@ const PlacementDashboard: React.FC = () => {
             {/* Calendar */}
             <div className="col-span-12 md:col-span-6 lg:col-span-4">
               <Link to="/calendar">
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="relative group h-full"
-                >
+                <motion.div whileHover={{ y: -4 }} className="relative group h-full">
                   <div className="absolute -inset-[1px] bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
                   <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-indigo-500/30 transition-all">
                     <div className="flex items-start gap-4">
@@ -304,9 +326,12 @@ const PlacementDashboard: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-white mb-1">Calendar</h3>
-                        <p className="text-sm text-slate-400 mb-3">Schedule interviews and events</p>
+                        <p className="text-sm text-slate-400 mb-3">
+                          Schedule interviews and events
+                        </p>
                         <div className="flex items-center text-sm text-indigo-400 font-semibold">
-                          Open Calendar <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          Open Calendar{' '}
+                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </div>
@@ -318,10 +343,7 @@ const PlacementDashboard: React.FC = () => {
             {/* Profile */}
             <div className="col-span-12 md:col-span-6 lg:col-span-4">
               <Link to="/profile">
-                <motion.div
-                  whileHover={{ y: -4 }}
-                  className="relative group h-full"
-                >
+                <motion.div whileHover={{ y: -4 }} className="relative group h-full">
                   <div className="absolute -inset-[1px] bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
                   <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-emerald-500/30 transition-all">
                     <div className="flex items-start gap-4">
@@ -332,9 +354,12 @@ const PlacementDashboard: React.FC = () => {
                       </div>
                       <div className="flex-1">
                         <h3 className="text-lg font-bold text-white mb-1">My Profile</h3>
-                        <p className="text-sm text-slate-400 mb-3">View and update your information</p>
+                        <p className="text-sm text-slate-400 mb-3">
+                          View and update your information
+                        </p>
                         <div className="flex items-center text-sm text-emerald-400 font-semibold">
-                          View Profile <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          View Profile{' '}
+                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
                     </div>
@@ -363,7 +388,10 @@ const PlacementDashboard: React.FC = () => {
                   </div>
                   <div className="text-right">
                     <div className="text-4xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                      {stats.totalStudents > 0 ? Math.round((stats.placedStudents / stats.totalStudents) * 100) : 0}%
+                      {stats.totalStudents > 0
+                        ? Math.round((stats.placedStudents / stats.totalStudents) * 100)
+                        : 0}
+                      %
                     </div>
                     <p className="text-sm text-slate-400">Success Rate</p>
                   </div>
@@ -373,8 +401,10 @@ const PlacementDashboard: React.FC = () => {
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500"
                     initial={{ width: 0 }}
-                    animate={{ width: `${stats.totalStudents > 0 ? (stats.placedStudents / stats.totalStudents) * 100 : 0}%` }}
-                    transition={{ duration: 1, delay: 0.8, ease: "easeOut" }}
+                    animate={{
+                      width: `${stats.totalStudents > 0 ? (stats.placedStudents / stats.totalStudents) * 100 : 0}%`,
+                    }}
+                    transition={{ duration: 1, delay: 0.8, ease: 'easeOut' }}
                   />
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"
@@ -389,11 +419,15 @@ const PlacementDashboard: React.FC = () => {
                     <p className="text-sm text-slate-400">Total Students</p>
                   </div>
                   <div className="text-center p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                    <p className="text-2xl font-bold text-emerald-400 mb-1">{stats.placedStudents}</p>
+                    <p className="text-2xl font-bold text-emerald-400 mb-1">
+                      {stats.placedStudents}
+                    </p>
                     <p className="text-sm text-slate-400">Placed</p>
                   </div>
                   <div className="text-center p-4 bg-white/5 rounded-xl border border-white/5">
-                    <p className="text-2xl font-bold text-slate-300 mb-1">{stats.totalStudents - stats.placedStudents}</p>
+                    <p className="text-2xl font-bold text-slate-300 mb-1">
+                      {stats.totalStudents - stats.placedStudents}
+                    </p>
                     <p className="text-sm text-slate-400">Remaining</p>
                   </div>
                 </div>
