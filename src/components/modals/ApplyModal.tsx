@@ -78,9 +78,11 @@ const ApplyModal: React.FC<ApplyModalProps> = ({ isOpen, onClose, opportunity })
         setIsSuccess(false);
         setCoverLetter('');
       }, 2000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error applying:', error);
-      alert('Failed to apply. Please try again.');
+      alert(
+        `Failed to apply: ${error?.message || error?.details || 'Unknown error'}. Please try again.`
+      );
     } finally {
       setIsSubmitting(false);
     }

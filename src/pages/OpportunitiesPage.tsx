@@ -82,7 +82,7 @@ const OpportunitiesPage: React.FC = () => {
     try {
       // Apply internally through the system
       await api.applyToOpportunity(opp.id, user.id);
-      showToast('success', 'Application submitted successfully!');
+      showToast('success', 'Application submitted! You can track it in your Dashboard.');
 
       // If external URL exists, optionally open it
       if (opp?.application_url) {
@@ -98,7 +98,7 @@ const OpportunitiesPage: React.FC = () => {
       if (error.message?.includes('duplicate')) {
         showToast('error', 'You have already applied to this opportunity');
       } else {
-        showToast('error', 'Failed to submit application. Please try again.');
+        showToast('error', `Failed to apply: ${error.message || 'Please try again.'}`);
       }
     }
   };

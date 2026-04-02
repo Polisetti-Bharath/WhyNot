@@ -28,7 +28,7 @@ export const api = {
           .from('student_profiles')
           .select('*')
           .eq('id', userId);
-          
+
         if (studentProfiles && studentProfiles.length > 0) {
           studentData = studentProfiles[0];
         }
@@ -55,10 +55,7 @@ export const api = {
     });
 
     if (Object.keys(profileData).length > 0) {
-      const { error } = await supabase
-        .from('profiles')
-        .update(profileData)
-        .eq('id', userId);
+      const { error } = await supabase.from('profiles').update(profileData).eq('id', userId);
       if (error) throw error;
     }
 
@@ -67,7 +64,7 @@ export const api = {
       const { error } = await supabase
         .from('student_profiles')
         .upsert({ id: userId, ...studentData }, { onConflict: 'id' });
-      
+
       if (error) {
         console.error('Student profile upsert error:', error);
         throw error;
@@ -96,9 +93,11 @@ export const api = {
 
     if (filters?.location) query = query.ilike('location', `%${filters.location}%`);
     if (filters?.minStipend) query = query.gte('stipend_max', filters.minStipend); // Match if max stipend is at least the filter
-    
+
     if (filters?.search) {
-      query = query.or(`title.ilike.%${filters.search}%,company_name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+      query = query.or(
+        `title.ilike.%${filters.search}%,company_name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`
+      );
     }
 
     const { data, error } = await query;
@@ -112,40 +111,61 @@ export const api = {
       .from('student_profiles')
       .select('cgpa, skills, resume_url, major, year, semester')
       .eq('id', studentId)
-      .single();
+      .maybeSingle();
 
     if (profileError) {
       console.error('Failed to fetch student profile for snapshot:', profileError);
-      throw profileError;
     }
 
-    // Create application with profile snapshot
-    const { data, error } = await supabase
+    // Try creating application with profile snapshot first
+    const applicationData = {
+      opportunity_id: opportunityId,
+      student_id: studentId,
+      cover_letter: coverLetter,
+      status: 'PENDING',
+      // Snapshot: freeze profile data at application time (if supported/exists)
+      snapshot_cgpa: studentProfile?.cgpa || null,
+      snapshot_skills: studentProfile?.skills || [],
+      snapshot_resume_url: studentProfile?.resume_url || null,
+      snapshot_major: studentProfile?.major || null,
+      snapshot_year: studentProfile?.year || null,
+      snapshot_semester: studentProfile?.semester || null,
+    };
+
+    let { data, error } = await supabase
       .from('applications')
-      .insert({
-        opportunity_id: opportunityId,
-        student_id: studentId,
-        cover_letter: coverLetter,
-        status: 'PENDING',
-        // Snapshot: freeze profile data at application time
-        snapshot_cgpa: studentProfile?.cgpa,
-        snapshot_skills: studentProfile?.skills || [],
-        snapshot_resume_url: studentProfile?.resume_url,
-        snapshot_major: studentProfile?.major,
-        snapshot_year: studentProfile?.year,
-        snapshot_semester: studentProfile?.semester
-      })
+      .insert(applicationData)
       .select()
       .single();
 
-    if (error) throw error;
+    // If it fails because snapshot columns don't exist, try inserting without them
+    if (error && error.message && error.message.includes('snapshot_')) {
+      console.warn('Snapshot columns missing in database. Retrying without snapshots...', error);
+      const { data: fallbackData, error: fallbackError } = await supabase
+        .from('applications')
+        .insert({
+          opportunity_id: opportunityId,
+          student_id: studentId,
+          cover_letter: coverLetter,
+          status: 'PENDING',
+        })
+        .select()
+        .single();
+
+      if (fallbackError) throw fallbackError;
+      data = fallbackData;
+    } else if (error) {
+      throw error;
+    }
+
     return data;
   },
 
   async getMyApplications(studentId: string) {
     const { data, error } = await supabase
       .from('applications')
-      .select(`
+      .select(
+        `
         *,
         opportunity:opportunities (
           title,
@@ -158,7 +178,8 @@ export const api = {
           required_skills,
           min_cgpa
         )
-      `)
+      `
+      )
       .eq('student_id', studentId)
       .order('created_at', { ascending: false });
 
@@ -176,5 +197,5 @@ export const api = {
 
     if (error) throw error;
     return data;
-  }
+  },
 };
