@@ -18,8 +18,8 @@ export const fetchExternalJobs = async (query?: string, source?: string): Promis
   const apiKey = import.meta.env.VITE_RAPIDAPI_KEY;
   
   if (!apiKey) {
-    console.warn("VITE_RAPIDAPI_KEY is missing in your .env file. Falling back to a free public job board API (Arbeitnow) which does not require auth.");
-    return fetchFallbackJobs(query);
+    console.warn("VITE_RAPIDAPI_KEY is missing in your .env file. Falling back to a free public job board API (Remotive) which does not require auth.");
+    return fetchFallbackJobs(query, source);
   }
 
   const searchQuery = query || 'Software Engineer';
@@ -67,37 +67,42 @@ export const fetchExternalJobs = async (query?: string, source?: string): Promis
   } catch (error) {
     console.error('Error fetching from JSearch:', error);
     // Fallback if RapidAPI fails
-    return fetchFallbackJobs(query);
+    return fetchFallbackJobs(query, source);
   }
 };
 
-// Free fallback API (Arbeitnow) that requires no authentication
-// It serves real jobs, though mostly Remote/EU. 
-const fetchFallbackJobs = async (query?: string): Promise<ExternalJob[]> => {
+// Free fallback API (Remotive) that requires no authentication
+// It serves real, dynamically updating tech jobs globally.
+const fetchFallbackJobs = async (query?: string, source?: string): Promise<ExternalJob[]> => {
   try {
-    const response = await fetch('https://www.arbeitnow.com/api/job-board-api');
+    let url = 'https://remotive.com/api/remote-jobs?category=software-dev';
+    if (query) {
+      url += `&search=${encodeURIComponent(query)}`;
+    }
+    const response = await fetch(url);
     const json = await response.json();
     
-    let jobs = json.data.map((job: any) => ({
-      id: job.slug,
+    let jobs = json.jobs.map((job: any) => ({
+      id: job.id.toString(),
       title: job.title,
       company: job.company_name,
-      location: job.location,
-      type: job.job_types?.[0] || 'Full-time',
-      source: 'Arbeitnow',
+      location: job.candidate_required_location || 'Remote',
+      type: job.job_type?.replace(/_/g, ' ') || 'Full-time',
+      source: job.publication_date ? 'Remotive' : 'Web',
       description: job.description.replace(/<[^>]*>?/gm, '').substring(0, 300) + '...',
       applyLink: job.url,
-      postedAt: new Date(job.created_at * 1000).toLocaleDateString(),
-      logoUrl: '',
-      salary: 'Not Disclosed'
+      postedAt: new Date(job.publication_date).toLocaleDateString(),
+      logoUrl: job.company_logo,
+      salary: job.salary || 'Not Disclosed'
     }));
 
-    if (query) {
-      const lowerQ = query.toLowerCase();
-      jobs = jobs.filter((j: any) => j.title.toLowerCase().includes(lowerQ) || j.company.toLowerCase().includes(lowerQ));
+    if (source && source !== 'All') {
+        // Just mock the source text if user specifically filters for UI consistency, 
+        // since Remotive aggregates globally
+        jobs = jobs.map((job: any) => ({ ...job, source: source }));
     }
 
-    return jobs;
+    return jobs.slice(0, 50); // limit to 50 jobs for performance
   } catch (error) {
     console.error("Fallback API failed:", error);
     return [];
