@@ -18,14 +18,14 @@ interface State {
  */
 class ErrorBoundary extends React.Component<Props, State> {
   public state: State;
-  
+
   constructor(props: Props) {
     super(props);
     this.state = {
       hasError: false,
       error: null,
       errorInfo: null,
-      retryCount: 0
+      retryCount: 0,
     };
   }
 
@@ -35,28 +35,28 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Error caught by boundary:', error, errorInfo);
-    
+
     // Log to error tracking service (e.g., Sentry) in production
     if (process.env.NODE_ENV === 'production') {
       // logErrorToService(error, errorInfo);
     }
-    
+
     this.setState({ errorInfo });
   }
 
   private handleReset = () => {
-    this.setState({ 
-      hasError: false, 
-      error: null, 
+    this.setState({
+      hasError: false,
+      error: null,
       errorInfo: null,
-      retryCount: this.state.retryCount + 1
+      retryCount: this.state.retryCount + 1,
     });
     window.location.href = '/';
   };
 
   private handleReload = () => {
-    this.setState(prevState => ({ 
-      retryCount: prevState.retryCount + 1 
+    this.setState(prevState => ({
+      retryCount: prevState.retryCount + 1,
     }));
     window.location.reload();
   };
@@ -69,17 +69,14 @@ class ErrorBoundary extends React.Component<Props, State> {
       }
 
       return (
-        <div 
+        <div
           className="min-h-screen flex items-center justify-center bg-black text-white p-6"
           role="alert"
           aria-live="assertive"
         >
           <div className="max-w-2xl w-full text-center">
             <div className="mb-8">
-              <AlertTriangle 
-                className="w-24 h-24 text-rose-400 mx-auto mb-6" 
-                aria-hidden="true"
-              />
+              <AlertTriangle className="w-24 h-24 text-rose-400 mx-auto mb-6" aria-hidden="true" />
               <h1 className="text-4xl font-bold mb-4">Oops! Something went wrong</h1>
               <p className="text-slate-400 text-lg mb-2">
                 We encountered an unexpected error. Don't worry, we're on it!
@@ -87,13 +84,13 @@ class ErrorBoundary extends React.Component<Props, State> {
               <p className="text-slate-500 text-sm">
                 Try reloading the page or returning to the home page.
               </p>
-              
+
               {this.state.retryCount > 0 && (
                 <p className="text-sm text-purple-400 mt-4 font-medium">
                   Retry attempts: {this.state.retryCount}
                 </p>
               )}
-              
+
               {this.state.error && process.env.NODE_ENV === 'development' && (
                 <details className="mt-6 text-left">
                   <summary className="cursor-pointer text-sm text-slate-500 hover:text-slate-400 mb-2 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-2 py-1">

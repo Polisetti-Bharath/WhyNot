@@ -20,10 +20,7 @@ interface BreadcrumbsProps {
  */
 const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
   return (
-    <nav 
-      aria-label="Breadcrumb" 
-      className={`flex items-center gap-2 text-sm ${className}`}
-    >
+    <nav aria-label="Breadcrumb" className={`flex items-center gap-2 text-sm ${className}`}>
       <ol className="flex items-center gap-2">
         <li>
           <Link
@@ -36,7 +33,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
         </li>
         {items.map((item, index) => {
           const isLast = index === items.length - 1;
-          
+
           return (
             <React.Fragment key={index}>
               <li aria-hidden="true">
@@ -44,7 +41,7 @@ const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items, className = '' }) => {
               </li>
               <li>
                 {isLast || !item.path ? (
-                  <span 
+                  <span
                     className="flex items-center gap-1 text-white font-medium"
                     aria-current="page"
                   >

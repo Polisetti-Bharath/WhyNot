@@ -31,7 +31,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const showToast = useCallback((type: ToastType, message: string, duration: number = 3000) => {
     const id = Math.random().toString(36).substr(2, 9);
     const newToast: Toast = { id, type, message, duration };
-    
+
     setToasts(prev => [...prev, newToast]);
 
     if (duration > 0) {
@@ -47,19 +47,27 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const getToastIcon = (type: ToastType) => {
     switch (type) {
-      case 'success': return <CheckCircle size={20} />;
-      case 'error': return <XCircle size={20} />;
-      case 'warning': return <AlertCircle size={20} />;
-      case 'info': return <Info size={20} />;
+      case 'success':
+        return <CheckCircle size={20} />;
+      case 'error':
+        return <XCircle size={20} />;
+      case 'warning':
+        return <AlertCircle size={20} />;
+      case 'info':
+        return <Info size={20} />;
     }
   };
 
   const getToastStyles = (type: ToastType) => {
     switch (type) {
-      case 'success': return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-      case 'error': return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
-      case 'warning': return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
-      case 'info': return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
+      case 'success':
+        return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+      case 'error':
+        return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
+      case 'warning':
+        return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+      case 'info':
+        return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20';
     }
   };
 

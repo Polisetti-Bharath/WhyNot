@@ -20,14 +20,14 @@ export const useScrollToTop = () => {
     // Check if this is a page refresh
     const savedScrollPosition = sessionStorage.getItem('scrollPosition');
     const savedScrollPath = sessionStorage.getItem('scrollPath');
-    
+
     if (savedScrollPosition && savedScrollPath === pathname) {
       // Restore scroll position after a brief delay to ensure content is loaded
       const scrollY = parseInt(savedScrollPosition, 10);
       setTimeout(() => {
         window.scrollTo({ top: scrollY, behavior: 'instant' });
       }, 0);
-      
+
       // Clear saved position after restoring
       sessionStorage.removeItem('scrollPosition');
       sessionStorage.removeItem('scrollPath');

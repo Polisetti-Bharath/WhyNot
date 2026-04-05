@@ -1,9 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Home, Briefcase, Settings, LogOut, 
-  Calendar, BarChart3, Users, Sparkles, Zap, Menu, X, TrendingUp, ExternalLink
+import {
+  Home,
+  Briefcase,
+  Settings,
+  LogOut,
+  Calendar,
+  BarChart3,
+  Users,
+  Sparkles,
+  Zap,
+  Menu,
+  X,
+  TrendingUp,
+  ExternalLink,
 } from 'lucide-react';
 import { UserRole } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,11 +25,7 @@ interface SidebarProps {
   userAvatar?: string;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ 
-  userRole, 
-  userName = 'Guest',
-  userAvatar
-}) => {
+const Sidebar: React.FC<SidebarProps> = ({ userRole, userName = 'Guest', userAvatar }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
@@ -39,30 +46,91 @@ const Sidebar: React.FC<SidebarProps> = ({
     switch (userRole) {
       case UserRole.STUDENT:
         return [
-          { label: 'Dashboard', path: '/dashboard', icon: Home, gradient: 'from-cyan-400 to-blue-500' },
-          { label: 'Opportunities', path: '/opportunities', icon: Briefcase, gradient: 'from-purple-400 to-pink-500' },
-          { label: 'External Jobs', path: '/external-jobs', icon: ExternalLink, gradient: 'from-blue-400 to-cyan-500' },
-          { label: 'Career Simulator', path: '/career-simulator', icon: TrendingUp, gradient: 'from-purple-400 to-indigo-500', badge: 'NEW' },
-          { label: 'Calendar', path: '/calendar', icon: Calendar, gradient: 'from-green-400 to-emerald-500' },
-          { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3, gradient: 'from-yellow-400 to-orange-500' },
-          { label: 'Profile', path: '/profile', icon: Users, gradient: 'from-indigo-400 to-purple-500' },
+          {
+            label: 'Dashboard',
+            path: '/dashboard',
+            icon: Home,
+            gradient: 'from-cyan-400 to-blue-500',
+          },
+          {
+            label: 'Opportunities',
+            path: '/opportunities',
+            icon: Briefcase,
+            gradient: 'from-purple-400 to-pink-500',
+          },
+          {
+            label: 'External Jobs',
+            path: '/external-jobs',
+            icon: ExternalLink,
+            gradient: 'from-blue-400 to-cyan-500',
+          },
+          {
+            label: 'Career Simulator',
+            path: '/career-simulator',
+            icon: TrendingUp,
+            gradient: 'from-purple-400 to-indigo-500',
+            badge: 'NEW',
+          },
+          {
+            label: 'Calendar',
+            path: '/calendar',
+            icon: Calendar,
+            gradient: 'from-green-400 to-emerald-500',
+          },
+          {
+            label: 'Resume AI',
+            path: '/resume-analyzer',
+            icon: BarChart3,
+            gradient: 'from-yellow-400 to-orange-500',
+          },
+          {
+            label: 'Profile',
+            path: '/profile',
+            icon: Users,
+            gradient: 'from-indigo-400 to-purple-500',
+          },
         ];
-      
+
       case UserRole.PLACEMENT_OFFICER:
         return [
-          { label: 'Dashboard', path: '/placement/dashboard', icon: Home, gradient: 'from-cyan-400 to-blue-500' },
-          { label: 'Opportunities', path: '/placement/opportunities', icon: Briefcase, gradient: 'from-purple-400 to-pink-500' },
-          { label: 'Calendar', path: '/calendar', icon: Calendar, gradient: 'from-green-400 to-emerald-500' },
-          { label: 'Settings', path: '/settings', icon: Settings, gradient: 'from-indigo-400 to-purple-500' },
+          {
+            label: 'Dashboard',
+            path: '/placement/dashboard',
+            icon: Home,
+            gradient: 'from-cyan-400 to-blue-500',
+          },
+          {
+            label: 'Opportunities',
+            path: '/placement/opportunities',
+            icon: Briefcase,
+            gradient: 'from-purple-400 to-pink-500',
+          },
+          {
+            label: 'Calendar',
+            path: '/calendar',
+            icon: Calendar,
+            gradient: 'from-green-400 to-emerald-500',
+          },
+          {
+            label: 'Settings',
+            path: '/settings',
+            icon: Settings,
+            gradient: 'from-indigo-400 to-purple-500',
+          },
         ];
-      
+
       default:
         return [];
     }
   };
 
   const navItems = getNavigationItems();
-  const initials = userName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  const initials = userName
+    .split(' ')
+    .map(n => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
     <>
@@ -103,7 +171,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           {/* Animated Gradient Border */}
           <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-purple-500/20 to-pink-500/20 rounded-r-3xl" />
           <div className="absolute inset-[1px] bg-gradient-to-br from-slate-900/98 via-slate-900/95 to-black/98 backdrop-blur-3xl rounded-r-3xl" />
-          
+
           {/* Animated Glow Effects */}
           <motion.div
             animate={{
@@ -113,7 +181,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             transition={{
               duration: 4,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: 'easeInOut',
             }}
             className="absolute top-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]"
           />
@@ -125,8 +193,8 @@ const Sidebar: React.FC<SidebarProps> = ({
             transition={{
               duration: 5,
               repeat: Infinity,
-              ease: "easeInOut",
-              delay: 1
+              ease: 'easeInOut',
+              delay: 1,
             }}
             className="absolute bottom-0 right-0 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px]"
           />
@@ -162,7 +230,9 @@ const Sidebar: React.FC<SidebarProps> = ({
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-white truncate">{userName}</p>
-                <p className="text-xs text-slate-400 capitalize">{userRole?.toLowerCase().replace('_', ' ')}</p>
+                <p className="text-xs text-slate-400 capitalize">
+                  {userRole?.toLowerCase().replace('_', ' ')}
+                </p>
               </div>
             </div>
           </div>
@@ -190,24 +260,28 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <motion.div
                         layoutId="activeNav"
                         className="absolute inset-0 bg-gradient-to-r from-white/10 to-white/5 rounded-xl border border-white/20"
-                        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
                       />
                     )}
-                    
-                    <div className={`relative flex items-center gap-3 p-3 rounded-xl transition-all ${
-                      isActive 
-                        ? 'text-white' 
-                        : 'text-slate-400 hover:text-white hover:bg-white/5'
-                    }`}>
+
+                    <div
+                      className={`relative flex items-center gap-3 p-3 rounded-xl transition-all ${
+                        isActive ? 'text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'
+                      }`}
+                    >
                       {/* Icon with Gradient */}
-                      <div className={`relative w-10 h-10 rounded-lg flex items-center justify-center ${
-                        isActive 
-                          ? `bg-gradient-to-br ${item.gradient}` 
-                          : 'bg-white/5 group-hover:bg-white/10'
-                      } transition-all`}>
-                        <Icon className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`} />
+                      <div
+                        className={`relative w-10 h-10 rounded-lg flex items-center justify-center ${
+                          isActive
+                            ? `bg-gradient-to-br ${item.gradient}`
+                            : 'bg-white/5 group-hover:bg-white/10'
+                        } transition-all`}
+                      >
+                        <Icon
+                          className={`w-5 h-5 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`}
+                        />
                       </div>
-                      
+
                       {/* Label */}
                       <span className={`text-sm font-semibold ${isActive ? 'text-white' : ''}`}>
                         {item.label}
@@ -222,7 +296,9 @@ const Sidebar: React.FC<SidebarProps> = ({
 
                       {/* Hover Glow */}
                       {!isActive && (
-                        <div className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-10 rounded-xl transition-opacity blur-xl`} />
+                        <div
+                          className={`absolute inset-0 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-10 rounded-xl transition-opacity blur-xl`}
+                        />
                       )}
                     </div>
                   </Link>

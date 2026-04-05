@@ -1,9 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  User, Mail, Phone, Book, Award, FileText, Edit, MapPin, 
-  Save, X, Plus, Trash2, Briefcase, Target, Calendar,
-  GraduationCap, Code, Star, TrendingUp, CheckCircle, Building2, Users, Shield
+import {
+  User,
+  Mail,
+  Phone,
+  Book,
+  Award,
+  FileText,
+  Edit,
+  MapPin,
+  Save,
+  X,
+  Plus,
+  Trash2,
+  Briefcase,
+  Target,
+  Calendar,
+  GraduationCap,
+  Code,
+  Star,
+  TrendingUp,
+  CheckCircle,
+  Building2,
+  Users,
+  Shield,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -25,14 +45,17 @@ const ProfilePage: React.FC = () => {
     year: user?.year || 0,
     semester: user?.semester || 0,
     skills: user?.skills || [],
-    placementStatus: user?.placementStatus || 'unplaced' as 'unplaced' | 'placed' | 'in-process',
+    placementStatus: user?.placementStatus || ('unplaced' as 'unplaced' | 'placed' | 'in-process'),
     preferences: {
       roles: user?.preferences?.roles || [],
       locations: user?.preferences?.locations || [],
-      minStipend: user?.preferences?.minStipend || 0
-    }
+      minStipend: user?.preferences?.minStipend || 0,
+    },
   });
-  const [newSkill, setNewSkill] = useState({ name: '', level: 'Beginner' as 'Beginner' | 'Intermediate' | 'Advanced' });
+  const [newSkill, setNewSkill] = useState({
+    name: '',
+    level: 'Beginner' as 'Beginner' | 'Intermediate' | 'Advanced',
+  });
   const [newLocation, setNewLocation] = useState('');
   const [newRole, setNewRole] = useState('');
 
@@ -52,8 +75,8 @@ const ProfilePage: React.FC = () => {
         preferences: {
           roles: user.preferences?.roles || [],
           locations: user.preferences?.locations || [],
-          minStipend: user.preferences?.minStipend || 0
-        }
+          minStipend: user.preferences?.minStipend || 0,
+        },
       });
     }
   }, [user]);
@@ -66,7 +89,7 @@ const ProfilePage: React.FC = () => {
         .update({
           name: formData.name,
           phone: formData.phone,
-          department: formData.department
+          department: formData.department,
         })
         .eq('id', user!.id);
 
@@ -74,9 +97,8 @@ const ProfilePage: React.FC = () => {
 
       // Only update student_profiles if user is a student
       if (!isPlacementOfficer) {
-        const { error: studentError } = await supabase
-          .from('student_profiles')
-          .upsert({
+        const { error: studentError } = await supabase.from('student_profiles').upsert(
+          {
             id: user!.id,
             cgpa: formData.cgpa,
             major: formData.major,
@@ -84,8 +106,10 @@ const ProfilePage: React.FC = () => {
             semester: formData.semester,
             skills: formData.skills,
             preferences: formData.preferences,
-            placement_status: formData.placementStatus
-          }, { onConflict: 'id' });
+            placement_status: formData.placementStatus,
+          },
+          { onConflict: 'id' }
+        );
 
         if (studentError) throw studentError;
       }
@@ -115,8 +139,8 @@ const ProfilePage: React.FC = () => {
       preferences: {
         roles: user?.preferences?.roles || [],
         locations: user?.preferences?.locations || [],
-        minStipend: user?.preferences?.minStipend || 0
-      }
+        minStipend: user?.preferences?.minStipend || 0,
+      },
     });
     setEditMode(false);
   };
@@ -125,7 +149,7 @@ const ProfilePage: React.FC = () => {
     if (newSkill.name.trim()) {
       setFormData({
         ...formData,
-        skills: [...formData.skills, newSkill]
+        skills: [...formData.skills, newSkill],
       });
       setNewSkill({ name: '', level: 'Beginner' });
     }
@@ -134,7 +158,7 @@ const ProfilePage: React.FC = () => {
   const handleRemoveSkill = (index: number) => {
     setFormData({
       ...formData,
-      skills: formData.skills.filter((_, i) => i !== index)
+      skills: formData.skills.filter((_, i) => i !== index),
     });
   };
 
@@ -144,8 +168,8 @@ const ProfilePage: React.FC = () => {
         ...formData,
         preferences: {
           ...formData.preferences,
-          locations: [...formData.preferences.locations, newLocation]
-        }
+          locations: [...formData.preferences.locations, newLocation],
+        },
       });
       setNewLocation('');
     }
@@ -156,8 +180,8 @@ const ProfilePage: React.FC = () => {
       ...formData,
       preferences: {
         ...formData.preferences,
-        locations: formData.preferences.locations.filter(l => l !== location)
-      }
+        locations: formData.preferences.locations.filter(l => l !== location),
+      },
     });
   };
 
@@ -167,8 +191,8 @@ const ProfilePage: React.FC = () => {
         ...formData,
         preferences: {
           ...formData.preferences,
-          roles: [...formData.preferences.roles, newRole]
-        }
+          roles: [...formData.preferences.roles, newRole],
+        },
       });
       setNewRole('');
     }
@@ -179,8 +203,8 @@ const ProfilePage: React.FC = () => {
       ...formData,
       preferences: {
         ...formData.preferences,
-        roles: formData.preferences.roles.filter(r => r !== role)
-      }
+        roles: formData.preferences.roles.filter(r => r !== role),
+      },
     });
   };
 
@@ -195,7 +219,7 @@ const ProfilePage: React.FC = () => {
   const profileCompletion = () => {
     let completed = 0;
     const total = 8;
-    
+
     if (user?.name) completed++;
     if (user?.phone) completed++;
     if (user?.department) completed++;
@@ -204,7 +228,7 @@ const ProfilePage: React.FC = () => {
     if (user?.preferences?.roles && user.preferences.roles.length > 0) completed++;
     if (user?.preferences?.locations && user.preferences.locations.length > 0) completed++;
     if (user?.resume_url) completed++;
-    
+
     return Math.round((completed / total) * 100);
   };
 
@@ -219,16 +243,14 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
             className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
           >
             <div>
-              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
-                Officer Profile
-              </h1>
+              <h1 className="text-3xl md:text-4xl font-black text-white mb-2">Officer Profile</h1>
               <p className="text-slate-400 text-lg">Manage your placement officer account</p>
             </div>
-            
+
             {!editMode ? (
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -271,24 +293,25 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
               className="col-span-12"
             >
               <div className="relative group">
                 <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                
+
                 <div className="relative glass-panel rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all">
                   <div className="flex flex-col md:flex-row items-center gap-8">
                     {/* Avatar */}
-                    <motion.div 
-                      whileHover={{ scale: 1.05 }}
-                      className="relative"
-                    >
+                    <motion.div whileHover={{ scale: 1.05 }} className="relative">
                       <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full blur-xl opacity-60" />
                       <div className="relative w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full p-1">
                         <div className="w-full h-full rounded-full bg-slate-900 overflow-hidden flex items-center justify-center">
                           {user.avatar ? (
-                            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                            <img
+                              src={user.avatar}
+                              alt={user.name}
+                              className="w-full h-full object-cover"
+                            />
                           ) : (
                             <span className="text-5xl font-bold text-white">
                               {user.name.charAt(0).toUpperCase()}
@@ -304,14 +327,16 @@ const ProfilePage: React.FC = () => {
                     {/* User Info */}
                     <div className="flex-1 text-center md:text-left">
                       {editMode ? (
-                        <input 
+                        <input
                           type="text"
                           value={formData.name}
-                          onChange={(e) => setFormData({...formData, name: e.target.value})}
+                          onChange={e => setFormData({ ...formData, name: e.target.value })}
                           className="text-3xl md:text-4xl font-black bg-white/5 border border-white/20 rounded-lg px-4 py-2 w-full md:w-auto mb-2"
                         />
                       ) : (
-                        <h2 className="text-3xl md:text-4xl font-black text-white mb-2">{user.name}</h2>
+                        <h2 className="text-3xl md:text-4xl font-black text-white mb-2">
+                          {user.name}
+                        </h2>
                       )}
                       <p className="text-slate-400 text-lg flex items-center justify-center md:justify-start gap-2">
                         <Mail className="w-5 h-5" />
@@ -336,7 +361,7 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
               className="col-span-12 md:col-span-6"
             >
               <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -344,7 +369,7 @@ const ProfilePage: React.FC = () => {
                   <User className="w-6 h-6 text-indigo-400" />
                   Contact Information
                 </h3>
-                
+
                 <div className="space-y-4">
                   <div className="flex justify-between items-center py-3 border-b border-white/5">
                     <span className="text-slate-400 flex items-center gap-2">
@@ -360,10 +385,10 @@ const ProfilePage: React.FC = () => {
                       Phone
                     </span>
                     {editMode ? (
-                      <input 
+                      <input
                         type="tel"
                         value={formData.phone}
-                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
                         className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-48 text-right"
                         placeholder="+91 9876543210"
                       />
@@ -378,15 +403,17 @@ const ProfilePage: React.FC = () => {
                       Department
                     </span>
                     {editMode ? (
-                      <input 
+                      <input
                         type="text"
                         value={formData.department}
-                        onChange={(e) => setFormData({...formData, department: e.target.value})}
+                        onChange={e => setFormData({ ...formData, department: e.target.value })}
                         className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-48 text-right"
                         placeholder="Computer Science"
                       />
                     ) : (
-                      <span className="font-semibold text-white">{user.department || 'Not set'}</span>
+                      <span className="font-semibold text-white">
+                        {user.department || 'Not set'}
+                      </span>
                     )}
                   </div>
 
@@ -395,7 +422,9 @@ const ProfilePage: React.FC = () => {
                       <User className="w-4 h-4" />
                       Officer ID
                     </span>
-                    <span className="font-mono text-white font-semibold">{user.id.substring(0, 8).toUpperCase()}</span>
+                    <span className="font-mono text-white font-semibold">
+                      {user.id.substring(0, 8).toUpperCase()}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -405,7 +434,7 @@ const ProfilePage: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+              transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
               className="col-span-12 md:col-span-6"
             >
               <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -413,14 +442,16 @@ const ProfilePage: React.FC = () => {
                   <TrendingUp className="w-6 h-6 text-purple-400" />
                   Your Role
                 </h3>
-                
+
                 <div className="space-y-4">
                   <div className="p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/20">
                     <div className="flex items-center gap-3 mb-2">
                       <Briefcase className="w-5 h-5 text-indigo-400" />
                       <span className="font-semibold text-white">Post Opportunities</span>
                     </div>
-                    <p className="text-sm text-slate-400">Create and manage internship and placement postings for students</p>
+                    <p className="text-sm text-slate-400">
+                      Create and manage internship and placement postings for students
+                    </p>
                   </div>
 
                   <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
@@ -428,7 +459,9 @@ const ProfilePage: React.FC = () => {
                       <Users className="w-5 h-5 text-purple-400" />
                       <span className="font-semibold text-white">Monitor Students</span>
                     </div>
-                    <p className="text-sm text-slate-400">Track student placement status and interview progress</p>
+                    <p className="text-sm text-slate-400">
+                      Track student placement status and interview progress
+                    </p>
                   </div>
                 </div>
               </div>
@@ -443,7 +476,10 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-black relative overflow-hidden pt-28">
       {/* Pure black background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden" style={{display: 'none'}}>
+      <div
+        className="fixed inset-0 pointer-events-none overflow-hidden"
+        style={{ display: 'none' }}
+      >
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -451,7 +487,7 @@ const ProfilePage: React.FC = () => {
             x: [0, 100, 0],
             y: [0, -50, 0],
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
           className="absolute top-0 right-0 w-[800px] h-[800px] bg-indigo-500/30 rounded-full blur-[150px]"
         />
         <motion.div
@@ -461,7 +497,7 @@ const ProfilePage: React.FC = () => {
             x: [0, -100, 0],
             y: [0, 100, 0],
           }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+          transition={{ duration: 25, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
           className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-purple-500/30 rounded-full blur-[150px]"
         />
       </div>
@@ -471,16 +507,14 @@ const ProfilePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4"
         >
           <div>
-            <h1 className="text-3xl md:text-4xl font-black text-white mb-2">
-              My Profile
-            </h1>
+            <h1 className="text-3xl md:text-4xl font-black text-white mb-2">My Profile</h1>
             <p className="text-slate-400 text-lg">Manage your personal and academic information</p>
           </div>
-          
+
           {!editMode ? (
             <motion.button
               whileHover={{ scale: 1.05 }}
@@ -521,7 +555,7 @@ const ProfilePage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
           className="mb-8 glass-panel rounded-2xl p-6 border border-white/10"
         >
           <div className="flex items-center justify-between mb-3">
@@ -538,7 +572,7 @@ const ProfilePage: React.FC = () => {
               className="absolute inset-0 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
               initial={{ width: 0 }}
               animate={{ width: `${profileCompletion()}%` }}
-              transition={{ duration: 1, delay: 0.2, ease: "easeOut" }}
+              transition={{ duration: 1, delay: 0.2, ease: 'easeOut' }}
             />
             <motion.div
               className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"
@@ -554,24 +588,25 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.2, ease: 'easeOut' }}
             className="col-span-12"
           >
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-pink-500/20 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-all duration-500" />
-              
+
               <div className="relative glass-panel rounded-3xl p-8 border border-white/10 group-hover:border-white/20 transition-all">
                 <div className="flex flex-col md:flex-row items-center gap-8">
                   {/* Avatar */}
-                  <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    className="relative"
-                  >
+                  <motion.div whileHover={{ scale: 1.05 }} className="relative">
                     <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full blur-xl opacity-60" />
                     <div className="relative w-32 h-32 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-full p-1">
                       <div className="w-full h-full rounded-full bg-slate-900 overflow-hidden flex items-center justify-center">
                         {user.avatar ? (
-                          <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+                          <img
+                            src={user.avatar}
+                            alt={user.name}
+                            className="w-full h-full object-cover"
+                          />
                         ) : (
                           <span className="text-5xl font-bold text-white">
                             {user.name.charAt(0).toUpperCase()}
@@ -584,10 +619,10 @@ const ProfilePage: React.FC = () => {
                   {/* User Info */}
                   <div className="flex-1 text-center md:text-left">
                     {editMode ? (
-                      <input 
+                      <input
                         type="text"
                         value={formData.name}
-                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        onChange={e => setFormData({ ...formData, name: e.target.value })}
                         className="text-3xl md:text-4xl font-bold mb-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2 w-full md:max-w-md"
                       />
                     ) : (
@@ -595,7 +630,7 @@ const ProfilePage: React.FC = () => {
                         {user.name}
                       </h2>
                     )}
-                    
+
                     <div className="flex flex-wrap justify-center md:justify-start gap-4 text-slate-400 mb-4">
                       <div className="flex items-center gap-2">
                         <Mail className="w-4 h-4" />
@@ -604,23 +639,27 @@ const ProfilePage: React.FC = () => {
                       {editMode ? (
                         <div className="flex items-center gap-2">
                           <Phone className="w-4 h-4" />
-                          <input 
+                          <input
                             type="tel"
                             value={formData.phone}
-                            onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                            onChange={e => setFormData({ ...formData, phone: e.target.value })}
                             placeholder="Phone number"
                             className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-sm w-40"
                           />
                         </div>
-                      ) : user.phone && (
-                        <div className="flex items-center gap-2">
-                          <Phone className="w-4 h-4" />
-                          <span className="text-sm">{user.phone}</span>
-                        </div>
+                      ) : (
+                        user.phone && (
+                          <div className="flex items-center gap-2">
+                            <Phone className="w-4 h-4" />
+                            <span className="text-sm">{user.phone}</span>
+                          </div>
+                        )
                       )}
                       <div className="flex items-center gap-2">
                         <User className="w-4 h-4" />
-                        <span className="text-sm capitalize">{user.role?.toLowerCase().replace('_', ' ')}</span>
+                        <span className="text-sm capitalize">
+                          {user.role?.toLowerCase().replace('_', ' ')}
+                        </span>
                       </div>
                     </div>
 
@@ -633,9 +672,11 @@ const ProfilePage: React.FC = () => {
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ delay: 0.3 + index * 0.05 }}
                           className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                            skill.level === 'Advanced' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
-                            skill.level === 'Intermediate' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
-                            'bg-cyan-500/20 text-rose-400 border border-rose-500/30'
+                            skill.level === 'Advanced'
+                              ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                              : skill.level === 'Intermediate'
+                                ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                                : 'bg-cyan-500/20 text-rose-400 border border-rose-500/30'
                           }`}
                         >
                           {skill.name}
@@ -673,7 +714,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
             className="col-span-12 md:col-span-6"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -681,7 +722,7 @@ const ProfilePage: React.FC = () => {
                 <GraduationCap className="w-6 h-6 text-indigo-400" />
                 Academic Information
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between items-center py-3 border-b border-white/5">
                   <span className="text-slate-400 flex items-center gap-2">
@@ -689,10 +730,10 @@ const ProfilePage: React.FC = () => {
                     Department
                   </span>
                   {editMode ? (
-                    <input 
+                    <input
                       type="text"
                       value={formData.department}
-                      onChange={(e) => setFormData({...formData, department: e.target.value})}
+                      onChange={e => setFormData({ ...formData, department: e.target.value })}
                       className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-48 text-right"
                     />
                   ) : (
@@ -707,25 +748,29 @@ const ProfilePage: React.FC = () => {
                   </span>
                   {editMode ? (
                     <div className="flex gap-2">
-                      <input 
+                      <input
                         type="number"
                         min="1"
                         max="5"
                         value={formData.year}
-                        onChange={(e) => setFormData({...formData, year: parseInt(e.target.value)})}
+                        onChange={e => setFormData({ ...formData, year: parseInt(e.target.value) })}
                         className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-20 text-right"
                       />
-                      <input 
+                      <input
                         type="number"
                         min="1"
                         max="10"
                         value={formData.semester}
-                        onChange={(e) => setFormData({...formData, semester: parseInt(e.target.value)})}
+                        onChange={e =>
+                          setFormData({ ...formData, semester: parseInt(e.target.value) })
+                        }
                         className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-20 text-right"
                       />
                     </div>
                   ) : (
-                    <span className="font-semibold text-white">Year {user.year}, Sem {user.semester}</span>
+                    <span className="font-semibold text-white">
+                      Year {user.year}, Sem {user.semester}
+                    </span>
                   )}
                 </div>
 
@@ -735,17 +780,19 @@ const ProfilePage: React.FC = () => {
                     CGPA
                   </span>
                   {editMode ? (
-                    <input 
+                    <input
                       type="number"
                       min="0"
                       max="10"
                       step="0.01"
                       value={formData.cgpa}
-                      onChange={(e) => setFormData({...formData, cgpa: parseFloat(e.target.value)})}
+                      onChange={e => setFormData({ ...formData, cgpa: parseFloat(e.target.value) })}
                       className="font-bold text-emerald-400 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-24 text-right"
                     />
                   ) : (
-                    <span className="font-bold text-emerald-400 text-xl">{user.cgpa || 'Not set'}</span>
+                    <span className="font-bold text-emerald-400 text-xl">
+                      {user.cgpa || 'Not set'}
+                    </span>
                   )}
                 </div>
 
@@ -754,7 +801,9 @@ const ProfilePage: React.FC = () => {
                     <User className="w-4 h-4" />
                     Student ID
                   </span>
-                  <span className="font-mono text-white font-semibold">{user.id.substring(0, 8).toUpperCase()}</span>
+                  <span className="font-mono text-white font-semibold">
+                    {user.id.substring(0, 8).toUpperCase()}
+                  </span>
                 </div>
 
                 <div className="flex justify-between items-center py-3 border-t border-white/5 mt-2">
@@ -765,7 +814,12 @@ const ProfilePage: React.FC = () => {
                   {editMode ? (
                     <select
                       value={formData.placementStatus || 'unplaced'}
-                      onChange={(e) => setFormData({...formData, placementStatus: e.target.value as 'unplaced' | 'placed' | 'in-process'})}
+                      onChange={e =>
+                        setFormData({
+                          ...formData,
+                          placementStatus: e.target.value as 'unplaced' | 'placed' | 'in-process',
+                        })
+                      }
                       className="font-semibold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm"
                     >
                       <option value="unplaced">Not Placed</option>
@@ -773,16 +827,20 @@ const ProfilePage: React.FC = () => {
                       <option value="placed">Placed</option>
                     </select>
                   ) : (
-                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                      user.placementStatus === 'placed' 
-                        ? 'bg-green-500/20 text-green-400 border border-green-500/30' 
+                    <span
+                      className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                        user.placementStatus === 'placed'
+                          ? 'bg-green-500/20 text-green-400 border border-green-500/30'
+                          : user.placementStatus === 'in-process'
+                            ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                            : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'
+                      }`}
+                    >
+                      {user.placementStatus === 'placed'
+                        ? '✓ Placed'
                         : user.placementStatus === 'in-process'
-                        ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
-                        : 'bg-slate-500/20 text-slate-400 border border-slate-500/30'
-                    }`}>
-                      {user.placementStatus === 'placed' ? '✓ Placed' : 
-                       user.placementStatus === 'in-process' ? '⏳ In Process' : 
-                       'Not Placed'}
+                          ? '⏳ In Process'
+                          : 'Not Placed'}
                     </span>
                   )}
                 </div>
@@ -794,7 +852,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.4, ease: 'easeOut' }}
             className="col-span-12 md:col-span-6"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -805,17 +863,17 @@ const ProfilePage: React.FC = () => {
 
               {editMode && (
                 <div className="mb-4 flex gap-2">
-                  <input 
+                  <input
                     type="text"
                     value={newSkill.name}
-                    onChange={(e) => setNewSkill({...newSkill, name: e.target.value})}
+                    onChange={e => setNewSkill({ ...newSkill, name: e.target.value })}
                     placeholder="Skill name"
                     className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
+                    onKeyPress={e => e.key === 'Enter' && handleAddSkill()}
                   />
                   <select
                     value={newSkill.level}
-                    onChange={(e) => setNewSkill({...newSkill, level: e.target.value as any})}
+                    onChange={e => setNewSkill({ ...newSkill, level: e.target.value as any })}
                     className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm"
                   >
                     <option value="Beginner">Beginner</option>
@@ -841,25 +899,35 @@ const ProfilePage: React.FC = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                     className={`flex items-center justify-between p-3 rounded-xl ${
-                      skill.level === 'Advanced' ? 'bg-green-500/10 border border-green-500/20' :
-                      skill.level === 'Intermediate' ? 'bg-yellow-500/10 border border-yellow-500/20' :
-                      'bg-cyan-500/10 border border-rose-500/20'
+                      skill.level === 'Advanced'
+                        ? 'bg-green-500/10 border border-green-500/20'
+                        : skill.level === 'Intermediate'
+                          ? 'bg-yellow-500/10 border border-yellow-500/20'
+                          : 'bg-cyan-500/10 border border-rose-500/20'
                     }`}
                   >
                     <div className="flex items-center gap-3">
-                      <div className={`w-2 h-2 rounded-full ${
-                        skill.level === 'Advanced' ? 'bg-green-400' :
-                        skill.level === 'Intermediate' ? 'bg-yellow-400' :
-                        'bg-cyan-400'
-                      }`} />
+                      <div
+                        className={`w-2 h-2 rounded-full ${
+                          skill.level === 'Advanced'
+                            ? 'bg-green-400'
+                            : skill.level === 'Intermediate'
+                              ? 'bg-yellow-400'
+                              : 'bg-cyan-400'
+                        }`}
+                      />
                       <span className="font-semibold text-white">{skill.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs font-semibold px-2 py-1 rounded-full ${
-                        skill.level === 'Advanced' ? 'text-green-400' :
-                        skill.level === 'Intermediate' ? 'text-yellow-400' :
-                        'text-rose-400'
-                      }`}>
+                      <span
+                        className={`text-xs font-semibold px-2 py-1 rounded-full ${
+                          skill.level === 'Advanced'
+                            ? 'text-green-400'
+                            : skill.level === 'Intermediate'
+                              ? 'text-yellow-400'
+                              : 'text-rose-400'
+                        }`}
+                      >
                         {skill.level}
                       </span>
                       {editMode && (
@@ -887,7 +955,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.5, ease: 'easeOut' }}
             className="col-span-12 md:col-span-7"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -905,13 +973,13 @@ const ProfilePage: React.FC = () => {
                   </label>
                   {editMode && (
                     <div className="flex gap-2 mb-3">
-                      <input 
+                      <input
                         type="text"
                         value={newRole}
-                        onChange={(e) => setNewRole(e.target.value)}
+                        onChange={e => setNewRole(e.target.value)}
                         placeholder="e.g., Frontend Developer"
                         className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm"
-                        onKeyPress={(e) => e.key === 'Enter' && handleAddRole()}
+                        onKeyPress={e => e.key === 'Enter' && handleAddRole()}
                       />
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -953,13 +1021,13 @@ const ProfilePage: React.FC = () => {
                   </label>
                   {editMode && (
                     <div className="flex gap-2 mb-3">
-                      <input 
+                      <input
                         type="text"
                         value={newLocation}
-                        onChange={(e) => setNewLocation(e.target.value)}
+                        onChange={e => setNewLocation(e.target.value)}
                         placeholder="e.g., Bangalore"
                         className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm"
-                        onKeyPress={(e) => e.key === 'Enter' && handleAddLocation()}
+                        onKeyPress={e => e.key === 'Enter' && handleAddLocation()}
                       />
                       <motion.button
                         whileHover={{ scale: 1.05 }}
@@ -1002,18 +1070,20 @@ const ProfilePage: React.FC = () => {
                   {editMode ? (
                     <div className="flex items-center gap-2">
                       <span className="text-white">₹</span>
-                      <input 
+                      <input
                         type="number"
                         min="0"
                         step="1000"
                         value={formData.preferences.minStipend}
-                        onChange={(e) => setFormData({
-                          ...formData,
-                          preferences: {
-                            ...formData.preferences,
-                            minStipend: parseInt(e.target.value) || 0
-                          }
-                        })}
+                        onChange={e =>
+                          setFormData({
+                            ...formData,
+                            preferences: {
+                              ...formData.preferences,
+                              minStipend: parseInt(e.target.value) || 0,
+                            },
+                          })
+                        }
                         className="font-bold bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm w-32 text-right text-white"
                       />
                       <span className="text-white">/ month</span>
@@ -1032,7 +1102,7 @@ const ProfilePage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.6, ease: "easeOut" }}
+            transition={{ duration: 0.4, delay: 0.6, ease: 'easeOut' }}
             className="col-span-12 md:col-span-5"
           >
             <div className="glass-panel rounded-2xl p-6 border border-white/10 h-full">
@@ -1040,8 +1110,8 @@ const ProfilePage: React.FC = () => {
                 <FileText className="w-6 h-6 text-orange-400" />
                 Resume
               </h3>
-              
-              <ResumeUpload 
+
+              <ResumeUpload
                 userId={user.id}
                 currentResumeUrl={user.resume_url}
                 onUploadComplete={handleResumeUpload}

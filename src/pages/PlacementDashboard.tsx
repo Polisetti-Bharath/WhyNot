@@ -311,7 +311,7 @@ const PlacementDashboard: React.FC = () => {
                 </motion.div>
               </Link>
             </div>
-            
+
             {/* Quick Actions (replaced Calendar link logic to balance layout if needed or just empty) */}
 
             {/* Profile */}

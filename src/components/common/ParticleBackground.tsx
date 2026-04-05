@@ -54,7 +54,7 @@ const ParticleBackground: React.FC = () => {
 
     // Animation
     let animationFrameId: number;
-    
+
     const animate = () => {
       // Create pure black background
       ctx.fillStyle = '#000000';
@@ -79,14 +79,14 @@ const ParticleBackground: React.FC = () => {
         // Draw connections
         particles.forEach((particle2, j) => {
           if (i === j) return;
-          
+
           const dx = particle.x - particle2.x;
           const dy = particle.y - particle2.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance < 150) {
             ctx.beginPath();
-            ctx.strokeStyle = particle.color + (0.3 * (1 - distance / 150)) + ')';
+            ctx.strokeStyle = particle.color + 0.3 * (1 - distance / 150) + ')';
             ctx.lineWidth = 0.8;
             ctx.moveTo(particle.x, particle.y);
             ctx.lineTo(particle2.x, particle2.y);

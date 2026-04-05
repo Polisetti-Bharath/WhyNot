@@ -4,7 +4,12 @@ interface NotificationParams {
   userId: string;
   title: string;
   message: string;
-  type: 'application_status' | 'new_opportunity' | 'interview_scheduled' | 'profile_update' | 'general';
+  type:
+    | 'application_status'
+    | 'new_opportunity'
+    | 'interview_scheduled'
+    | 'profile_update'
+    | 'general';
   relatedId?: string;
 }
 
@@ -13,16 +18,14 @@ interface NotificationParams {
  */
 export const sendNotification = async (params: NotificationParams): Promise<void> => {
   try {
-    const { error } = await supabase
-      .from('notifications')
-      .insert({
-        user_id: params.userId,
-        title: params.title,
-        message: params.message,
-        type: params.type,
-        related_id: params.relatedId,
-        read: false
-      });
+    const { error } = await supabase.from('notifications').insert({
+      user_id: params.userId,
+      title: params.title,
+      message: params.message,
+      type: params.type,
+      related_id: params.relatedId,
+      read: false,
+    });
 
     if (error) {
       console.error('Error sending notification:', error);
@@ -50,7 +53,7 @@ export const notifyApplicationStatusChange = async (
     OFFERED: 'Congratulations! You have received an offer',
     ACCEPTED: 'Your acceptance has been confirmed',
     PENDING_APPROVAL: 'Your application is pending mentor approval',
-    COMPLETED: 'Your application process has been completed'
+    COMPLETED: 'Your application process has been completed',
   };
 
   await sendNotification({
@@ -58,7 +61,7 @@ export const notifyApplicationStatusChange = async (
     title: `Application Update: ${opportunityTitle}`,
     message: statusMessages[newStatus] || 'Your application status has been updated',
     type: 'application_status',
-    relatedId: applicationId
+    relatedId: applicationId,
   });
 };
 
@@ -75,7 +78,7 @@ export const notifyNewOpportunity = async (
     title: 'New Opportunity Available',
     message: `Check out: ${opportunityTitle}`,
     type: 'new_opportunity',
-    relatedId: opportunityId
+    relatedId: opportunityId,
   });
 };
 
@@ -93,7 +96,7 @@ export const notifyInterviewScheduled = async (
     title: `Interview Scheduled: ${opportunityTitle}`,
     message: `Your interview is scheduled for ${new Date(interviewDate).toLocaleDateString()} at ${new Date(interviewDate).toLocaleTimeString()}`,
     type: 'interview_scheduled',
-    relatedId: applicationId
+    relatedId: applicationId,
   });
 };
 

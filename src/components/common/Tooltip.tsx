@@ -22,7 +22,7 @@ const Tooltip: React.FC<TooltipProps> = ({
   children,
   position = 'top',
   className = '',
-  showIcon = !children
+  showIcon = !children,
 }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -33,14 +33,16 @@ const Tooltip: React.FC<TooltipProps> = ({
     top: 'bottom-full left-1/2 -translate-x-1/2 mb-2',
     bottom: 'top-full left-1/2 -translate-x-1/2 mt-2',
     left: 'right-full top-1/2 -translate-y-1/2 mr-2',
-    right: 'left-full top-1/2 -translate-y-1/2 ml-2'
+    right: 'left-full top-1/2 -translate-y-1/2 ml-2',
   };
 
   const arrowClasses = {
     top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-slate-800',
-    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-slate-800',
+    bottom:
+      'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-slate-800',
     left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-slate-800',
-    right: 'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-slate-800'
+    right:
+      'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-slate-800',
   };
 
   // Close tooltip when clicking outside
@@ -124,7 +126,13 @@ const Tooltip: React.FC<TooltipProps> = ({
         aria-describedby={isVisible ? 'tooltip-content' : undefined}
         aria-expanded={isVisible}
       >
-        {children || (showIcon && <HelpCircle className="w-4 h-4 text-slate-400 hover:text-purple-400 transition-colors" aria-hidden="true" />)}
+        {children ||
+          (showIcon && (
+            <HelpCircle
+              className="w-4 h-4 text-slate-400 hover:text-purple-400 transition-colors"
+              aria-hidden="true"
+            />
+          ))}
       </button>
 
       {isVisible && (

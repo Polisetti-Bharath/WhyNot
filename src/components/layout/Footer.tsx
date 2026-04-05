@@ -1,6 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Github, Linkedin, Twitter, Mail, Heart, User, BarChart3, BookOpen, Settings, HelpCircle, Shield } from 'lucide-react';
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  Mail,
+  Heart,
+  User,
+  BarChart3,
+  BookOpen,
+  Settings,
+  HelpCircle,
+  Shield,
+} from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { UserRole } from '../../types';
 
@@ -11,19 +23,17 @@ const Footer: React.FC = () => {
   // Role-specific quick links
   const getQuickLinks = () => {
     if (!user) return [];
-    
+
     switch (user.role) {
       case UserRole.STUDENT:
         return [
           { label: 'Opportunities', path: '/opportunities' },
           { label: 'Settings', path: '/settings' },
         ];
-      
+
       case UserRole.PLACEMENT_OFFICER:
-        return [
-          { label: 'Post Opportunity', path: '/placement/post' },
-        ];
-      
+        return [{ label: 'Post Opportunity', path: '/placement/post' }];
+
       default:
         return [];
     }
@@ -40,7 +50,9 @@ const Footer: React.FC = () => {
             <Link to="/" className="flex items-center gap-3 group mb-4">
               <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/30 group-hover:shadow-purple-500/50 transition-all group-hover:scale-105">
                 <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
-                  <span className="text-xl font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">W</span>
+                  <span className="text-xl font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                    W
+                  </span>
                 </div>
               </div>
               <span className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent group-hover:from-rose-400 group-hover:to-purple-400 transition-all">
@@ -48,35 +60,35 @@ const Footer: React.FC = () => {
               </span>
             </Link>
             <p className="text-slate-400 text-sm mb-4 max-w-md">
-              Empowering students with AI-driven career insights and personalized guidance 
-              to make informed decisions about their future.
+              Empowering students with AI-driven career insights and personalized guidance to make
+              informed decisions about their future.
             </p>
             <div className="flex gap-4">
-              <a 
-                href="https://github.com" 
-                target="_blank" 
+              <a
+                href="https://github.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all hover:scale-105"
               >
                 <Github size={18} className="text-slate-400 hover:text-white transition-colors" />
               </a>
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
+              <a
+                href="https://linkedin.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all hover:scale-105"
               >
                 <Linkedin size={18} className="text-slate-400 hover:text-white transition-colors" />
               </a>
-              <a 
-                href="https://twitter.com" 
-                target="_blank" 
+              <a
+                href="https://twitter.com"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all hover:scale-105"
               >
                 <Twitter size={18} className="text-slate-400 hover:text-white transition-colors" />
               </a>
-              <a 
+              <a
                 href="mailto:contact@whynot.com"
                 className="w-10 h-10 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all hover:scale-105"
               >
@@ -92,9 +104,12 @@ const Footer: React.FC = () => {
                 Quick Access
               </h3>
               <ul className="space-y-2">
-                {quickLinks.map((link) => (
+                {quickLinks.map(link => (
                   <li key={link.path}>
-                    <Link to={link.path} className="text-slate-400 hover:text-white text-sm transition-colors">
+                    <Link
+                      to={link.path}
+                      className="text-slate-400 hover:text-white text-sm transition-colors"
+                    >
                       {link.label}
                     </Link>
                   </li>
@@ -108,22 +123,34 @@ const Footer: React.FC = () => {
               </h3>
               <ul className="space-y-2">
                 <li>
-                  <Link to="/#features" className="text-slate-400 hover:text-white text-sm transition-colors">
+                  <Link
+                    to="/#features"
+                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                  >
                     Features
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#how-it-works" className="text-slate-400 hover:text-white text-sm transition-colors">
+                  <Link
+                    to="/#how-it-works"
+                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                  >
                     How It Works
                   </Link>
                 </li>
                 <li>
-                  <Link to="/login" className="text-slate-400 hover:text-white text-sm transition-colors">
+                  <Link
+                    to="/login"
+                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                  >
                     Login
                   </Link>
                 </li>
                 <li>
-                  <Link to="/#about" className="text-slate-400 hover:text-white text-sm transition-colors">
+                  <Link
+                    to="/#about"
+                    className="text-slate-400 hover:text-white text-sm transition-colors"
+                  >
                     About Us
                   </Link>
                 </li>
@@ -138,24 +165,36 @@ const Footer: React.FC = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/help-center" className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2">
+                <Link
+                  to="/help-center"
+                  className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2"
+                >
                   <HelpCircle size={14} />
                   Help Center
                 </Link>
               </li>
               <li>
-                <Link to="/privacy-policy" className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2">
+                <Link
+                  to="/privacy-policy"
+                  className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2"
+                >
                   <Shield size={14} />
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link to="/terms-of-service" className="text-slate-400 hover:text-white text-sm transition-colors">
+                <Link
+                  to="/terms-of-service"
+                  className="text-slate-400 hover:text-white text-sm transition-colors"
+                >
                   Terms of Service
                 </Link>
               </li>
               <li>
-                <Link to="/contact-support" className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2">
+                <Link
+                  to="/contact-support"
+                  className="text-slate-400 hover:text-white text-sm transition-colors flex items-center gap-2"
+                >
                   <Mail size={14} />
                   Contact Support
                 </Link>
@@ -166,11 +205,10 @@ const Footer: React.FC = () => {
 
         {/* Bottom Bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-slate-500 text-sm">
-            © {currentYear} WhyNot. All rights reserved.
-          </p>
+          <p className="text-slate-500 text-sm">© {currentYear} WhyNot. All rights reserved.</p>
           <p className="text-slate-500 text-sm flex items-center gap-1">
-            Made with <Heart size={14} className="text-red-500 fill-current" /> for students everywhere
+            Made with <Heart size={14} className="text-red-500 fill-current" /> for students
+            everywhere
           </p>
         </div>
       </div>

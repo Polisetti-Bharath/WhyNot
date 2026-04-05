@@ -3,7 +3,7 @@ export enum ApplicationStatus {
   SHORTLISTED = 'SHORTLISTED',
   INTERVIEW_SCHEDULED = 'INTERVIEW_SCHEDULED',
   ACCEPTED = 'ACCEPTED',
-  REJECTED = 'REJECTED'
+  REJECTED = 'REJECTED',
 }
 
 export interface AuthUser {
@@ -29,12 +29,12 @@ export interface AuthUser {
 
 export enum UserRole {
   STUDENT = 'STUDENT',
-  PLACEMENT_OFFICER = 'PLACEMENT_OFFICER'
+  PLACEMENT_OFFICER = 'PLACEMENT_OFFICER',
 }
 
 export enum OpportunityType {
   INTERNSHIP = 'INTERNSHIP',
-  PLACEMENT = 'PLACEMENT'
+  PLACEMENT = 'PLACEMENT',
 }
 
 export interface Skill {
@@ -165,8 +165,8 @@ export interface ExplanationRequest {
 }
 
 export enum RejectionType {
-  RULE_BASED = 'RULE_BASED',  // Type A: Clear violations (CGPA, skills, deadline)
-  NON_RULE_BASED = 'NON_RULE_BASED'  // Type B: Subjective rejections (limited slots, screening)
+  RULE_BASED = 'RULE_BASED', // Type A: Clear violations (CGPA, skills, deadline)
+  NON_RULE_BASED = 'NON_RULE_BASED', // Type B: Subjective rejections (limited slots, screening)
 }
 
 export interface RejectionExplanation {
@@ -205,7 +205,7 @@ export enum EventType {
   DEADLINE = 'DEADLINE',
   INTERVIEW = 'INTERVIEW',
   DRIVE = 'DRIVE',
-  ANNOUNCEMENT = 'ANNOUNCEMENT'
+  ANNOUNCEMENT = 'ANNOUNCEMENT',
 }
 
 export interface CalendarEvent {

@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  FileText, TrendingUp, AlertCircle, CheckCircle, Target, 
-  ChevronDown, ChevronUp, Download, Trash2, Calendar 
+import {
+  FileText,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle,
+  Target,
+  ChevronDown,
+  ChevronUp,
+  Download,
+  Trash2,
+  Calendar,
 } from 'lucide-react';
 import { ResumeAnalysis, SectionScore } from '../../types';
 
@@ -21,7 +29,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
   onDownload,
   onExportPDF,
   showComparison: _showComparison,
-  previousAnalysis: _previousAnalysis
+  previousAnalysis: _previousAnalysis,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -50,10 +58,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
 
     return (
       <div className="relative">
-        <svg
-          className={size === 'large' ? 'w-32 h-32' : 'w-20 h-20'}
-          viewBox="0 0 100 100"
-        >
+        <svg className={size === 'large' ? 'w-32 h-32' : 'w-20 h-20'} viewBox="0 0 100 100">
           {/* Background circle */}
           <circle
             cx="50"
@@ -82,12 +87,20 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
             <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop
                 offset="0%"
-                className={score >= 80 ? 'text-green-500' : score >= 60 ? 'text-yellow-500' : 'text-red-500'}
+                className={
+                  score >= 80 ? 'text-green-500' : score >= 60 ? 'text-yellow-500' : 'text-red-500'
+                }
                 stopColor="currentColor"
               />
               <stop
                 offset="100%"
-                className={score >= 80 ? 'text-emerald-500' : score >= 60 ? 'text-amber-500' : 'text-rose-500'}
+                className={
+                  score >= 80
+                    ? 'text-emerald-500'
+                    : score >= 60
+                      ? 'text-amber-500'
+                      : 'text-rose-500'
+                }
                 stopColor="currentColor"
               />
             </linearGradient>
@@ -95,7 +108,9 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className={`font-bold ${size === 'large' ? 'text-2xl' : 'text-lg'} ${getScoreColor(score)}`}>
+            <div
+              className={`font-bold ${size === 'large' ? 'text-2xl' : 'text-lg'} ${getScoreColor(score)}`}
+            >
               {score}
             </div>
             {size === 'large' && <div className="text-xs text-slate-400">/ 100</div>}
@@ -109,12 +124,10 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
     <div key={section.name} className="p-4 rounded-lg bg-white/5 border border-white/10">
       <div className="flex items-center justify-between mb-2">
         <h4 className="font-semibold text-sm">{section.name}</h4>
-        <div className="flex items-center gap-2">
-          {renderScoreCircle(section.score, 'small')}
-        </div>
+        <div className="flex items-center gap-2">{renderScoreCircle(section.score, 'small')}</div>
       </div>
       <p className="text-xs text-slate-400 mb-2">{section.feedback}</p>
-      
+
       {section.strengths.length > 0 && (
         <div className="mb-2">
           <div className="text-xs font-semibold text-green-400 mb-1">✓ Strengths:</div>
@@ -128,7 +141,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
           </ul>
         </div>
       )}
-      
+
       {section.improvements.length > 0 && (
         <div>
           <div className="text-xs font-semibold text-amber-400 mb-1">→ Improvements:</div>
@@ -167,7 +180,7 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
                   day: 'numeric',
                   year: 'numeric',
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
                 })}
               </div>
             </div>
@@ -229,7 +242,8 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
             <div className="flex items-center gap-2">
               <Target className="w-4 h-4 text-purple-400" />
               <span className="text-sm">
-                {analysis.analysis_data.sectionScores.filter(s => s.score >= 80).length} / {analysis.analysis_data.sectionScores.length} sections strong
+                {analysis.analysis_data.sectionScores.filter(s => s.score >= 80).length} /{' '}
+                {analysis.analysis_data.sectionScores.length} sections strong
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -239,7 +253,9 @@ const ResumeAnalysisCard: React.FC<ResumeAnalysisCardProps> = ({
             <div className="flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-green-400" />
               <span className="text-sm">
-                {analysis.analysis_data.atsAnalysis.isATSFriendly ? 'ATS Friendly' : 'Needs ATS Work'}
+                {analysis.analysis_data.atsAnalysis.isATSFriendly
+                  ? 'ATS Friendly'
+                  : 'Needs ATS Work'}
               </span>
             </div>
           </div>

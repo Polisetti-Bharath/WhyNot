@@ -8,11 +8,7 @@ interface ProtectedRouteProps {
   userRole?: UserRole;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ 
-  children, 
-  requiredRole, 
-  userRole 
-}) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole, userRole }) => {
   // If no user is logged in, redirect to landing page
   if (!userRole) {
     return <Navigate to="/" replace />;

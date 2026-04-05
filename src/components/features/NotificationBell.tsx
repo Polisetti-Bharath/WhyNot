@@ -8,7 +8,12 @@ import { useToast } from '../../contexts/ToastContext';
 interface Notification {
   id: string;
   user_id: string;
-  type: 'application_status' | 'new_opportunity' | 'interview_scheduled' | 'profile_update' | 'general';
+  type:
+    | 'application_status'
+    | 'new_opportunity'
+    | 'interview_scheduled'
+    | 'profile_update'
+    | 'general';
   title: string;
   message: string;
   read: boolean;
@@ -27,7 +32,7 @@ const NotificationBell: React.FC = () => {
   // Fetch notifications
   const fetchNotifications = async () => {
     if (!user) return;
-    
+
     setLoading(true);
     try {
       const { data, error } = await supabase
@@ -60,12 +65,12 @@ const NotificationBell: React.FC = () => {
           event: 'INSERT',
           schema: 'public',
           table: 'notifications',
-          filter: `user_id=eq.${user.id}`
+          filter: `user_id=eq.${user.id}`,
         },
-        (payload) => {
+        payload => {
           const newNotification = payload.new as Notification;
           setNotifications(prev => [newNotification, ...prev]);
-          
+
           // Show toast for new notification
           showToast('info', newNotification.title);
         }
@@ -87,9 +92,7 @@ const NotificationBell: React.FC = () => {
 
       if (error) throw error;
 
-      setNotifications(prev =>
-        prev.map(n => n.id === notificationId ? { ...n, read: true } : n)
-      );
+      setNotifications(prev => prev.map(n => (n.id === notificationId ? { ...n, read: true } : n)));
     } catch (error) {
       console.error('Error marking notification as read:', error);
     }
@@ -98,7 +101,7 @@ const NotificationBell: React.FC = () => {
   // Mark all as read
   const markAllAsRead = async () => {
     if (!user) return;
-    
+
     try {
       const { error } = await supabase
         .from('notifications')
@@ -118,10 +121,7 @@ const NotificationBell: React.FC = () => {
   // Delete notification
   const deleteNotification = async (notificationId: string) => {
     try {
-      const { error } = await supabase
-        .from('notifications')
-        .delete()
-        .eq('id', notificationId);
+      const { error } = await supabase.from('notifications').delete().eq('id', notificationId);
 
       if (error) throw error;
 
@@ -184,10 +184,7 @@ const NotificationBell: React.FC = () => {
         {isOpen && (
           <>
             {/* Backdrop */}
-            <div
-              className="fixed inset-0 z-40"
-              onClick={() => setIsOpen(false)}
-            />
+            <div className="fixed inset-0 z-40" onClick={() => setIsOpen(false)} />
 
             {/* Dropdown Panel */}
             <motion.div
@@ -222,7 +219,7 @@ const NotificationBell: React.FC = () => {
                   </div>
                 ) : (
                   <div className="divide-y divide-slate-800">
-                    {notifications.map((notification) => (
+                    {notifications.map(notification => (
                       <motion.div
                         key={notification.id}
                         initial={{ opacity: 0 }}
@@ -233,16 +230,12 @@ const NotificationBell: React.FC = () => {
                       >
                         <div className="flex gap-3">
                           {/* Icon */}
-                          <div className="flex-shrink-0 mt-1">
-                            {getIcon(notification.type)}
-                          </div>
+                          <div className="flex-shrink-0 mt-1">{getIcon(notification.type)}</div>
 
                           {/* Content */}
                           <div className="flex-1 min-w-0">
                             <div className="flex justify-between items-start gap-2 mb-1">
-                              <h4 className="font-medium text-sm">
-                                {notification.title}
-                              </h4>
+                              <h4 className="font-medium text-sm">{notification.title}</h4>
                               <button
                                 onClick={() => deleteNotification(notification.id)}
                                 className="text-slate-500 hover:text-slate-300 transition-colors flex-shrink-0"
@@ -250,9 +243,7 @@ const NotificationBell: React.FC = () => {
                                 <X size={16} />
                               </button>
                             </div>
-                            <p className="text-sm text-slate-400 mb-2">
-                              {notification.message}
-                            </p>
+                            <p className="text-sm text-slate-400 mb-2">{notification.message}</p>
                             <div className="flex justify-between items-center">
                               <span className="text-xs text-slate-500">
                                 {formatTime(notification.created_at)}

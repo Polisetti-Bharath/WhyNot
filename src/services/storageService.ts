@@ -8,11 +8,11 @@ const BUCKET_NAME = 'resumes';
 export const initializeStorage = async () => {
   const { data: buckets } = await supabase.storage.listBuckets();
   const exists = buckets?.some(bucket => bucket.name === BUCKET_NAME);
-  
+
   if (!exists) {
     await supabase.storage.createBucket(BUCKET_NAME, {
       public: false,
-      fileSizeLimit: 10485760 // 10MB
+      fileSizeLimit: 10485760, // 10MB
     });
   }
 };
@@ -41,19 +41,15 @@ export const uploadResume = async (userId: string, file: File): Promise<string |
     const filePath = `${userId}/${fileName}`;
 
     // Upload file
-    const { data, error } = await supabase.storage
-      .from(BUCKET_NAME)
-      .upload(filePath, file, {
-        cacheControl: '3600',
-        upsert: true
-      });
+    const { data, error } = await supabase.storage.from(BUCKET_NAME).upload(filePath, file, {
+      cacheControl: '3600',
+      upsert: true,
+    });
 
     if (error) throw error;
 
     // Get public URL
-    const { data: urlData } = supabase.storage
-      .from(BUCKET_NAME)
-      .getPublicUrl(filePath);
+    const { data: urlData } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
 
     // Update user profile with resume URL
     await supabase
@@ -103,17 +99,12 @@ export const deleteResume = async (userId: string, resumeUrl: string): Promise<b
     const filePath = `${userId}/${urlParts[urlParts.length - 1]}`;
 
     // Delete from storage
-    const { error } = await supabase.storage
-      .from(BUCKET_NAME)
-      .remove([filePath]);
+    const { error } = await supabase.storage.from(BUCKET_NAME).remove([filePath]);
 
     if (error) throw error;
 
     // Update profile
-    await supabase
-      .from('student_profiles')
-      .update({ resume_url: null })
-      .eq('id', userId);
+    await supabase.from('student_profiles').update({ resume_url: null }).eq('id', userId);
 
     return true;
   } catch (error) {
@@ -127,7 +118,10 @@ export const deleteResume = async (userId: string, resumeUrl: string): Promise<b
  * @param filePath - Path to file in storage
  * @param expiresIn - Seconds until URL expires (default 1 hour)
  */
-export const getSignedResumeUrl = async (filePath: string, expiresIn: number = 3600): Promise<string | null> => {
+export const getSignedResumeUrl = async (
+  filePath: string,
+  expiresIn: number = 3600
+): Promise<string | null> => {
   try {
     const { data, error } = await supabase.storage
       .from(BUCKET_NAME)

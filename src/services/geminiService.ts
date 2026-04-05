@@ -2,7 +2,7 @@
  * Gemini Service (Public Interface)
  * Now independently connects to Google Gemini APIs, with fallback capabilities
  */
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
 import { ExplanationRequest, Application } from '../types';
 import * as HuggingFaceService from './huggingFaceService';
 
@@ -40,8 +40,8 @@ export interface RejectionAnalysis {
   actionPlan: string[];
   sentiment: string;
   type?: 'RULE_BASED' | 'NON_RULE_BASED';
-  violations?: Array<{category: string, description: string, expected: string, actual: string}>;
-  skillGaps?: Array<{skill: string, required: string, studentLevel?: string, suggestion: string}>;
+  violations?: Array<{ category: string; description: string; expected: string; actual: string }>;
+  skillGaps?: Array<{ skill: string; required: string; studentLevel?: string; suggestion: string }>;
   improvementSuggestions?: string[];
 }
 
@@ -50,12 +50,12 @@ export const generateRejectionExplanation = async (
   userId: string = 'anonymous'
 ): Promise<RejectionAnalysis> => {
   if (!genAI) {
-    console.warn("VITE_GEMINI_API_KEY is missing. Falling back to HuggingFace / Mock logic.");
+    console.warn('VITE_GEMINI_API_KEY is missing. Falling back to HuggingFace / Mock logic.');
     return HuggingFaceService.generateRejectionExplanation(data, userId);
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const prompt = `You are an expert career coach. Analyze this rejection to provide actionable feedback in JSON format.
       Job: ${data.jobRole} at ${data.jobCompany}
       Candidate Skills: ${data.skillConfidenceData?.map(s => s.name).join(', ')}
@@ -67,7 +67,7 @@ export const generateRejectionExplanation = async (
     const text = result.response.text().replace(/`{3}json|`{3}/g, '');
     return JSON.parse(text) as RejectionAnalysis;
   } catch (error) {
-    console.error("Gemini API Error, falling back to HF:", error);
+    console.error('Gemini API Error, falling back to HF:', error);
     return HuggingFaceService.generateRejectionExplanation(data, userId);
   }
 };
@@ -113,12 +113,12 @@ export const analyzeResume = async (
   userId: string
 ): Promise<any> => {
   if (!genAI) {
-    console.warn("VITE_GEMINI_API_KEY is missing. Falling back to HuggingFace / Mock logic.");
+    console.warn('VITE_GEMINI_API_KEY is missing. Falling back to HuggingFace / Mock logic.');
     return HuggingFaceService.analyzeResume(resumeText, targetRole, userId);
   }
 
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const prompt = `Analyze this resume for ${targetRole}. Return strictly valid JSON containing:
     "overallScore" (number), "sectionScores" (array of objects with name, score, feedback, strengths, improvements), "keywordAnalysis" (found, missing arrays), "atsAnalysis" (score, issues, tips arrays), "actionableAdvice" (array).
     Resume: ${resumeText.substring(0, 2000)}`;
@@ -127,7 +127,7 @@ export const analyzeResume = async (
     const text = result.response.text().replace(/`{3}json|`{3}/g, '');
     return JSON.parse(text);
   } catch (error) {
-    console.error("Gemini API Error, falling back to HF:", error);
+    console.error('Gemini API Error, falling back to HF:', error);
     return HuggingFaceService.analyzeResume(resumeText, targetRole, userId);
   }
 };
@@ -135,15 +135,19 @@ export const analyzeResume = async (
 export const generateResumeSuggestions = (analysisData: any): string[] => {
   const suggestions: string[] = [];
   if (analysisData.overallScore < 60) {
-    suggestions.push('🔴 Overall resume needs significant improvement. Focus on high-priority items.');
+    suggestions.push(
+      '🔴 Overall resume needs significant improvement. Focus on high-priority items.'
+    );
   } else if (analysisData.overallScore < 80) {
     suggestions.push('🟡 Good foundation, but areas need refinement.');
   } else {
     suggestions.push('🟢 Strong resume! Minor tweaks will make it excellent.');
   }
-  
+
   if (analysisData.atsAnalysis?.score < 70) {
-    suggestions.push(`⚠️ ATS Score: ${analysisData.atsAnalysis.score}/100 - May not pass screening`);
+    suggestions.push(
+      `⚠️ ATS Score: ${analysisData.atsAnalysis.score}/100 - May not pass screening`
+    );
   }
   return suggestions;
 };

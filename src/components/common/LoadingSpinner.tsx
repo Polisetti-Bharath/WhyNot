@@ -11,7 +11,7 @@ const sizeClasses = {
   sm: 'w-4 h-4',
   md: 'w-8 h-8',
   lg: 'w-12 h-12',
-  xl: 'w-16 h-16'
+  xl: 'w-16 h-16',
 };
 
 /**
@@ -20,27 +20,26 @@ const sizeClasses = {
  * @param fullScreen - Whether to display full-screen loading overlay
  * @param message - Optional loading message to display
  */
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = 'md', 
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  size = 'md',
   fullScreen = false,
-  message 
+  message,
 }) => {
   const spinner = (
-    <div className="flex flex-col items-center justify-center gap-3" role="status" aria-live="polite">
-      <Loader2 
-        className={`${sizeClasses[size]} animate-spin text-rose-500`}
-        aria-hidden="true"
-      />
-      {message && (
-        <p className="text-sm text-slate-400 animate-pulse">{message}</p>
-      )}
+    <div
+      className="flex flex-col items-center justify-center gap-3"
+      role="status"
+      aria-live="polite"
+    >
+      <Loader2 className={`${sizeClasses[size]} animate-spin text-rose-500`} aria-hidden="true" />
+      {message && <p className="text-sm text-slate-400 animate-pulse">{message}</p>}
       <span className="sr-only">Loading...</span>
     </div>
   );
 
   if (fullScreen) {
     return (
-      <div 
+      <div
         className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50"
         aria-label="Loading"
       >

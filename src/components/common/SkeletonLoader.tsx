@@ -16,25 +16,26 @@ interface SkeletonLoaderProps {
  * @param count - Number of skeleton items to render
  * @param className - Additional CSS classes
  */
-const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({ 
+const SkeletonLoader: React.FC<SkeletonLoaderProps> = ({
   variant = 'rectangular',
   width,
   height,
   count = 1,
-  className = ''
+  className = '',
 }) => {
-  const baseClasses = 'animate-pulse bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 bg-[length:200%_100%]';
-  
+  const baseClasses =
+    'animate-pulse bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 bg-[length:200%_100%]';
+
   const variantClasses = {
     text: 'h-4 rounded',
     circular: 'rounded-full',
     rectangular: 'rounded-lg',
-    card: 'rounded-xl h-48'
+    card: 'rounded-xl h-48',
   };
 
   const style = {
     width: width || (variant === 'circular' ? height : '100%'),
-    height: height || (variant === 'text' ? '1rem' : variant === 'circular' ? '3rem' : '100%')
+    height: height || (variant === 'text' ? '1rem' : variant === 'circular' ? '3rem' : '100%'),
   };
 
   const skeletonItems = Array.from({ length: count }, (_, index) => (

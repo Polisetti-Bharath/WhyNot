@@ -11,7 +11,7 @@ const NotFoundPage: React.FC = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
         className="max-w-2xl w-full text-center"
       >
         {/* 404 Animation */}
@@ -19,7 +19,7 @@ const NotFoundPage: React.FC = () => {
           className="text-[180px] font-bold leading-none mb-8"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
         >
           <span className="bg-gradient-to-r from-neon-purple via-neon-purple to-neon-pink bg-clip-text text-transparent">
             404
@@ -30,7 +30,7 @@ const NotFoundPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+          transition={{ duration: 0.4, delay: 0.1, ease: 'easeOut' }}
         >
           <h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
           <p className="text-slate-400 text-lg mb-8">

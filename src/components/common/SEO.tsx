@@ -25,12 +25,19 @@ interface SEOProps {
 const SEO: React.FC<SEOProps> = ({
   title = 'WhyNot - Campus Internship & Placement Platform',
   description = 'Turn rejections into opportunities. AI-powered platform for campus placements with smart rejection analysis, one-click applications, and real-time tracking.',
-  keywords = ['campus placement', 'internship', 'rejection analysis', 'AI career insights', 'student placement', 'job application tracking'],
+  keywords = [
+    'campus placement',
+    'internship',
+    'rejection analysis',
+    'AI career insights',
+    'student placement',
+    'job application tracking',
+  ],
   ogImage = '/og-image.png',
   ogType = 'website',
   twitterCard = 'summary_large_image',
   canonicalUrl,
-  structuredData
+  structuredData,
 }) => {
   const siteUrl = 'https://whynot.app'; // Update with actual domain
   const fullUrl = canonicalUrl ? `${siteUrl}${canonicalUrl}` : siteUrl;
@@ -39,22 +46,22 @@ const SEO: React.FC<SEOProps> = ({
   const defaultStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
-    'name': 'WhyNot',
-    'applicationCategory': 'EducationalApplication',
-    'operatingSystem': 'Web',
-    'description': description,
-    'url': siteUrl,
-    'offers': {
+    name: 'WhyNot',
+    applicationCategory: 'EducationalApplication',
+    operatingSystem: 'Web',
+    description: description,
+    url: siteUrl,
+    offers: {
       '@type': 'Offer',
-      'price': '0',
-      'priceCurrency': 'USD'
+      price: '0',
+      priceCurrency: 'USD',
     },
-    'featureList': [
+    featureList: [
       'AI-powered rejection analysis',
       'One-click job applications',
       'Real-time application tracking',
-      'Smart opportunity matching'
-    ]
+      'Smart opportunity matching',
+    ],
   };
 
   useEffect(() => {
@@ -65,13 +72,13 @@ const SEO: React.FC<SEOProps> = ({
     const setMetaTag = (property: string, content: string, isProperty = false) => {
       const attribute = isProperty ? 'property' : 'name';
       let element = document.querySelector(`meta[${attribute}="${property}"]`);
-      
+
       if (!element) {
         element = document.createElement('meta');
         element.setAttribute(attribute, property);
         document.head.appendChild(element);
       }
-      
+
       element.setAttribute('content', content);
     };
 
@@ -111,14 +118,28 @@ const SEO: React.FC<SEOProps> = ({
     canonical.href = fullUrl;
 
     // Structured Data (JSON-LD)
-    let script = document.querySelector('script[type="application/ld+json"]') as HTMLScriptElement | null;
+    let script = document.querySelector(
+      'script[type="application/ld+json"]'
+    ) as HTMLScriptElement | null;
     if (!script) {
       script = document.createElement('script');
       (script as HTMLScriptElement).type = 'application/ld+json';
       document.head.appendChild(script);
     }
     script.textContent = JSON.stringify(structuredData || defaultStructuredData);
-  }, [title, description, keywords, ogImage, ogType, twitterCard, canonicalUrl, fullUrl, fullImageUrl, structuredData, defaultStructuredData]);
+  }, [
+    title,
+    description,
+    keywords,
+    ogImage,
+    ogType,
+    twitterCard,
+    canonicalUrl,
+    fullUrl,
+    fullImageUrl,
+    structuredData,
+    defaultStructuredData,
+  ]);
 
   return null;
 };

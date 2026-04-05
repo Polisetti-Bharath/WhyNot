@@ -15,7 +15,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
   userId,
   currentResumeUrl,
   onUploadComplete,
-  onDelete
+  onDelete,
 }) => {
   const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
@@ -77,7 +77,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
 
   const handleDelete = async () => {
     if (!currentResumeUrl) return;
-    
+
     setDeleting(true);
     try {
       const success = await deleteResume(userId, currentResumeUrl);
@@ -96,7 +96,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
 
   const handleDownload = async () => {
     if (!currentResumeUrl) return;
-    
+
     try {
       await downloadResume(currentResumeUrl, `resume-${userId}.pdf`);
       showToast('success', 'Resume downloaded');
@@ -166,7 +166,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
             id="resume-upload"
           />
-          
+
           <div className="text-center">
             {uploading ? (
               <div className="flex flex-col items-center gap-3">
@@ -180,9 +180,7 @@ const ResumeUpload: React.FC<ResumeUploadProps> = ({
                 <p className="text-sm text-slate-400 mb-4">
                   Drag and drop your PDF here, or click to browse
                 </p>
-                <p className="text-xs text-slate-500">
-                  Maximum file size: 10MB • Format: PDF only
-                </p>
+                <p className="text-xs text-slate-500">Maximum file size: 10MB • Format: PDF only</p>
               </>
             )}
           </div>

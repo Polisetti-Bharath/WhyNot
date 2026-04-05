@@ -24,7 +24,7 @@ export class AppError extends Error {
     this.code = code;
     this.statusCode = statusCode;
     this.details = details;
-    
+
     // Maintains proper stack trace for where our error was thrown
     if (Error.captureStackTrace) {
       Error.captureStackTrace(this, AppError);
@@ -42,28 +42,28 @@ export const parseError = (error: unknown): ErrorDetails => {
       message: error.message,
       code: error.code,
       statusCode: error.statusCode,
-      details: error.details
+      details: error.details,
     };
   }
 
   // Handle standard Error instances
   if (error instanceof Error) {
     return {
-      message: error.message
+      message: error.message,
     };
   }
 
   // Handle Supabase errors
   if (typeof error === 'object' && error !== null) {
     const err = error as any;
-    
+
     // Supabase error format
     if (err.message) {
       return {
         message: err.message,
         code: err.code,
         statusCode: err.status || err.statusCode,
-        details: err.details || err.hint
+        details: err.details || err.hint,
       };
     }
   }
@@ -76,7 +76,7 @@ export const parseError = (error: unknown): ErrorDetails => {
   // Fallback for unknown errors
   return {
     message: 'An unexpected error occurred. Please try again.',
-    details: error
+    details: error,
   };
 };
 
@@ -99,7 +99,8 @@ export const getUserFriendlyMessage = (error: ErrorDetails): string => {
   }
 
   // Database errors
-  if (error.code?.startsWith('23')) { // PostgreSQL constraint violations
+  if (error.code?.startsWith('23')) {
+    // PostgreSQL constraint violations
     if (error.code === '23505') {
       return 'This record already exists. Please try a different value.';
     }
@@ -140,7 +141,7 @@ export const getUserFriendlyMessage = (error: ErrorDetails): string => {
  */
 export const logError = (error: unknown, context?: string) => {
   const errorDetails = parseError(error);
-  
+
   if (process.env.NODE_ENV === 'development') {
     console.group(`❌ Error${context ? ` in ${context}` : ''}`);
     console.error('Message:', errorDetails.message);
@@ -169,32 +170,32 @@ export const retryWithBackoff = async <T>(
   baseDelay: number = 1000
 ): Promise<T> => {
   let lastError: unknown;
-  
+
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       return await fn();
     } catch (error) {
       lastError = error;
-      
+
       // Don't retry on authentication errors
       const errorDetails = parseError(error);
       if (errorDetails.statusCode === 401 || errorDetails.statusCode === 403) {
         throw error;
       }
-      
+
       // Don't retry on final attempt
       if (attempt === maxRetries - 1) {
         break;
       }
-      
+
       // Exponential backoff: 1s, 2s, 4s, 8s, etc.
       const delay = baseDelay * Math.pow(2, attempt);
       await new Promise(resolve => setTimeout(resolve, delay));
-      
+
       console.log(`Retry attempt ${attempt + 1}/${maxRetries} after ${delay}ms`);
     }
   }
-  
+
   throw lastError;
 };
 
@@ -251,41 +252,43 @@ export const isAuthError = (error: unknown): boolean => {
 /**
  * Format error for display in UI
  */
-export const formatErrorForDisplay = (error: unknown): {
+export const formatErrorForDisplay = (
+  error: unknown
+): {
   title: string;
   message: string;
   action?: string;
 } => {
   const errorDetails = parseError(error);
   const message = getUserFriendlyMessage(errorDetails);
-  
+
   if (isNetworkError(error)) {
     return {
       title: 'Connection Error',
       message,
-      action: 'Check your internet connection'
+      action: 'Check your internet connection',
     };
   }
-  
+
   if (isAuthError(error)) {
     return {
       title: 'Authentication Required',
       message,
-      action: 'Please sign in again'
+      action: 'Please sign in again',
     };
   }
-  
+
   if (errorDetails.statusCode && errorDetails.statusCode >= 500) {
     return {
       title: 'Server Error',
       message,
-      action: 'Try again later'
+      action: 'Try again later',
     };
   }
-  
+
   return {
     title: 'Error',
     message,
-    action: 'Please try again'
+    action: 'Please try again',
   };
 };

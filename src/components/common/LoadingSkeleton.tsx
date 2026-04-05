@@ -41,11 +41,21 @@ export const StatCardSkeleton: React.FC = () => (
 
 export const TableRowSkeleton: React.FC = () => (
   <tr className="border-b border-white/5">
-    <td className="py-4 px-4"><Skeleton className="h-4 w-32" /></td>
-    <td className="py-4 px-4"><Skeleton className="h-4 w-24" /></td>
-    <td className="py-4 px-4"><Skeleton className="h-4 w-16" /></td>
-    <td className="py-4 px-4"><Skeleton className="h-6 w-20 rounded-full" /></td>
-    <td className="py-4 px-4"><Skeleton className="h-8 w-16 rounded" /></td>
+    <td className="py-4 px-4">
+      <Skeleton className="h-4 w-32" />
+    </td>
+    <td className="py-4 px-4">
+      <Skeleton className="h-4 w-24" />
+    </td>
+    <td className="py-4 px-4">
+      <Skeleton className="h-4 w-16" />
+    </td>
+    <td className="py-4 px-4">
+      <Skeleton className="h-6 w-20 rounded-full" />
+    </td>
+    <td className="py-4 px-4">
+      <Skeleton className="h-8 w-16 rounded" />
+    </td>
   </tr>
 );
 
@@ -56,7 +66,7 @@ interface LoadingGridProps {
 
 export const LoadingGrid: React.FC<LoadingGridProps> = ({ count = 6, type = 'card' }) => {
   const Component = type === 'stat' ? StatCardSkeleton : CardSkeleton;
-  
+
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: count }).map((_, i) => (
@@ -82,11 +92,21 @@ export const LoadingTable: React.FC<LoadingTableProps> = ({ rows = 5 }) => (
     <table className="w-full">
       <thead className="bg-white/5">
         <tr>
-          <th className="py-4 px-4 text-left"><Skeleton className="h-4 w-20" /></th>
-          <th className="py-4 px-4 text-left"><Skeleton className="h-4 w-20" /></th>
-          <th className="py-4 px-4 text-left"><Skeleton className="h-4 w-20" /></th>
-          <th className="py-4 px-4 text-left"><Skeleton className="h-4 w-20" /></th>
-          <th className="py-4 px-4 text-left"><Skeleton className="h-4 w-20" /></th>
+          <th className="py-4 px-4 text-left">
+            <Skeleton className="h-4 w-20" />
+          </th>
+          <th className="py-4 px-4 text-left">
+            <Skeleton className="h-4 w-20" />
+          </th>
+          <th className="py-4 px-4 text-left">
+            <Skeleton className="h-4 w-20" />
+          </th>
+          <th className="py-4 px-4 text-left">
+            <Skeleton className="h-4 w-20" />
+          </th>
+          <th className="py-4 px-4 text-left">
+            <Skeleton className="h-4 w-20" />
+          </th>
         </tr>
       </thead>
       <tbody>

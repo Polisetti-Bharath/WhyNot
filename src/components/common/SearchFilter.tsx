@@ -37,7 +37,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   onFiltersChange,
   filterGroups = [],
   className = '',
-  debounceMs = 300
+  debounceMs = 300,
 }) => {
   const [searchValue, setSearchValue] = useState('');
   const [showFilters, setShowFilters] = useState(false);
@@ -58,15 +58,15 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   };
 
   const handleFilterToggle = (groupId: string, value: string) => {
-    setSelectedFilters((prev) => {
+    setSelectedFilters(prev => {
       const groupFilters = prev[groupId] || [];
       const newGroupFilters = groupFilters.includes(value)
-        ? groupFilters.filter((v) => v !== value)
+        ? groupFilters.filter(v => v !== value)
         : [...groupFilters, value];
 
       const newFilters = {
         ...prev,
-        [groupId]: newGroupFilters
+        [groupId]: newGroupFilters,
       };
 
       // Remove empty filter groups
@@ -96,14 +96,14 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
       {/* Search Bar */}
       <div className="relative flex gap-3">
         <div className="relative flex-1">
-          <Search 
+          <Search
             className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5"
             aria-hidden="true"
           />
           <input
             type="text"
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
             placeholder={placeholder}
             className="w-full pl-12 pr-10 py-3 bg-slate-900/60 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all"
             aria-label={placeholder}
@@ -135,7 +135,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
               <SlidersHorizontal className="w-5 h-5" aria-hidden="true" />
               <span className="hidden sm:inline">Filters</span>
               {activeFilterCount > 0 && (
-                <span 
+                <span
                   className="absolute -top-2 -right-2 w-6 h-6 bg-rose-500 rounded-full text-xs font-bold flex items-center justify-center"
                   aria-label={`${activeFilterCount} active filters`}
                 >
@@ -149,7 +149,7 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
 
       {/* Filter Panel */}
       {showFilters && filterGroups.length > 0 && (
-        <div 
+        <div
           className="p-6 bg-slate-900/80 border border-slate-700 rounded-lg backdrop-blur-sm"
           role="region"
           aria-label="Filter options"
@@ -168,11 +168,11 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filterGroups.map((group) => (
+            {filterGroups.map(group => (
               <div key={group.id}>
                 <h4 className="text-sm font-medium text-slate-400 mb-3">{group.label}</h4>
                 <div className="space-y-2">
-                  {group.options.map((option) => {
+                  {group.options.map(option => {
                     const isSelected = selectedFilters[group.id]?.includes(option.value);
                     return (
                       <label

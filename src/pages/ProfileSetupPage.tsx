@@ -17,13 +17,13 @@ const ProfileSetupPage: React.FC = () => {
     year: user?.year || 1,
     semester: user?.semester || 1,
     phone: '',
-    
+
     // Academic
     cgpa: user?.cgpa || 0,
-    
+
     // Skills
-    skills: [] as { 
-      name: string; 
+    skills: [] as {
+      name: string;
       level: string;
       confidence?: 'Beginner' | 'Intermediate' | 'Advanced';
       evidence?: { type: string; details?: string }[];
@@ -32,13 +32,13 @@ const ProfileSetupPage: React.FC = () => {
     newSkillLevel: 'Beginner',
     newSkillConfidence: 'Beginner' as 'Beginner' | 'Intermediate' | 'Advanced',
     newSkillEvidence: [] as { type: string; details: string }[],
-    
+
     // Preferences
     preferences: {
       locations: [] as string[],
       stipendMin: 0,
       opportunityTypes: [] as string[],
-    }
+    },
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -50,16 +50,19 @@ const ProfileSetupPage: React.FC = () => {
     if (formData.newSkill) {
       setFormData(prev => ({
         ...prev,
-        skills: [...prev.skills, { 
-          name: prev.newSkill, 
-          level: prev.newSkillLevel,
-          confidence: prev.newSkillConfidence,
-          evidence: prev.newSkillEvidence.length > 0 ? prev.newSkillEvidence : undefined
-        }],
+        skills: [
+          ...prev.skills,
+          {
+            name: prev.newSkill,
+            level: prev.newSkillLevel,
+            confidence: prev.newSkillConfidence,
+            evidence: prev.newSkillEvidence.length > 0 ? prev.newSkillEvidence : undefined,
+          },
+        ],
         newSkill: '',
         newSkillLevel: 'Beginner',
         newSkillConfidence: 'Beginner',
-        newSkillEvidence: []
+        newSkillEvidence: [],
       }));
     }
   };
@@ -67,7 +70,7 @@ const ProfileSetupPage: React.FC = () => {
   const handleRemoveSkill = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      skills: prev.skills.filter((_, i) => i !== index)
+      skills: prev.skills.filter((_, i) => i !== index),
     }));
   };
 
@@ -83,20 +86,22 @@ const ProfileSetupPage: React.FC = () => {
         semester: Number(formData.semester),
         cgpa: Number(formData.cgpa),
         skills: formData.skills,
-        preferences: formData.preferences
+        preferences: formData.preferences,
       });
-      
+
       // Wait a moment for database to propagate
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       // Refresh user data to update context
       await refreshUser();
-      
+
       // Navigate to dashboard
       navigate('/dashboard', { replace: true });
     } catch (error: any) {
       console.error('Error updating profile:', error);
-      alert(`Failed to update profile: ${error.message || error.error_description || JSON.stringify(error)}`);
+      alert(
+        `Failed to update profile: ${error.message || error.error_description || JSON.stringify(error)}`
+      );
     }
   };
 
@@ -107,27 +112,30 @@ const ProfileSetupPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.4, ease: 'easeOut' }}
         className="max-w-2xl w-full bg-slate-900 p-8 rounded-xl border border-slate-800"
       >
         <h1 className="text-3xl font-bold mb-6 text-center">Complete Your Profile</h1>
-        
+
         <div className="flex justify-between mb-8">
           {[1, 2, 3, 4].map(i => (
-            <div key={i} className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= i ? 'bg-neutral-900' : 'bg-slate-700'}`}>
+            <div
+              key={i}
+              className={`w-8 h-8 rounded-full flex items-center justify-center ${step >= i ? 'bg-neutral-900' : 'bg-slate-700'}`}
+            >
               {i}
             </div>
           ))}
         </div>
 
         {step === 1 && (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }} 
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           >
             <h2 className="text-xl font-semibold mb-4">Basic Information</h2>
             <div className="space-y-4">
@@ -185,16 +193,21 @@ const ProfileSetupPage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6 flex justify-end">
-              <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
+              <button
+                onClick={nextStep}
+                className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800"
+              >
+                Next
+              </button>
             </div>
           </motion.div>
         )}
 
         {step === 2 && (
-          <motion.div 
-            initial={{ opacity: 0, x: 20 }} 
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            transition={{ duration: 0.4, ease: 'easeOut' }}
           >
             <h2 className="text-xl font-semibold mb-4">Academic Details</h2>
             <div className="space-y-4">
@@ -221,8 +234,15 @@ const ProfileSetupPage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6 flex justify-between">
-              <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
-              <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
+              <button onClick={prevStep} className="text-slate-400 hover:text-white">
+                Back
+              </button>
+              <button
+                onClick={nextStep}
+                className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800"
+              >
+                Next
+              </button>
             </div>
           </motion.div>
         )}
@@ -231,12 +251,15 @@ const ProfileSetupPage: React.FC = () => {
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
             <h2 className="text-xl font-semibold mb-4">Skills & Confidence</h2>
             <p className="text-sm text-slate-400 mb-4">
-              Add your skills with honest confidence levels. This helps provide better feedback on rejections.
+              Add your skills with honest confidence levels. This helps provide better feedback on
+              rejections.
             </p>
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-xs font-medium mb-1 text-slate-300">Skill Name</label>
+                  <label className="block text-xs font-medium mb-1 text-slate-300">
+                    Skill Name
+                  </label>
                   <input
                     type="text"
                     name="newSkill"
@@ -262,7 +285,7 @@ const ProfileSetupPage: React.FC = () => {
                   </select>
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-xs font-medium mb-1 text-slate-300">
                   Evidence (Optional) - How did you learn this?
@@ -270,12 +293,12 @@ const ProfileSetupPage: React.FC = () => {
                 <div className="flex gap-2">
                   <select
                     className="bg-slate-800 border border-slate-700 rounded p-2 text-sm"
-                    onChange={(e) => {
+                    onChange={e => {
                       if (e.target.value) {
                         const newEvidence = { type: e.target.value, details: '' };
                         setFormData(prev => ({
                           ...prev,
-                          newSkillEvidence: [...prev.newSkillEvidence, newEvidence]
+                          newSkillEvidence: [...prev.newSkillEvidence, newEvidence],
                         }));
                         e.target.value = '';
                       }
@@ -293,13 +316,16 @@ const ProfileSetupPage: React.FC = () => {
                 {formData.newSkillEvidence.length > 0 && (
                   <div className="mt-2 space-y-1">
                     {formData.newSkillEvidence.map((ev, idx) => (
-                      <div key={idx} className="flex items-center gap-2 text-xs bg-slate-800/50 p-2 rounded">
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2 text-xs bg-slate-800/50 p-2 rounded"
+                      >
                         <span className="text-purple-400">{ev.type}</span>
-                        <button 
+                        <button
                           onClick={() => {
                             setFormData(prev => ({
                               ...prev,
-                              newSkillEvidence: prev.newSkillEvidence.filter((_, i) => i !== idx)
+                              newSkillEvidence: prev.newSkillEvidence.filter((_, i) => i !== idx),
                             }));
                           }}
                           className="ml-auto text-red-400 hover:text-red-300"
@@ -312,8 +338,8 @@ const ProfileSetupPage: React.FC = () => {
                 )}
               </div>
 
-              <button 
-                onClick={handleAddSkill} 
+              <button
+                onClick={handleAddSkill}
                 className="w-full bg-green-600 px-4 py-2 rounded hover:bg-green-700 text-sm font-medium"
               >
                 Add Skill
@@ -321,13 +347,22 @@ const ProfileSetupPage: React.FC = () => {
 
               <div className="flex flex-wrap gap-2 mt-4">
                 {formData.skills.map((skill, index) => (
-                  <div key={index} className="bg-slate-700 px-3 py-2 rounded-lg flex flex-col gap-1">
+                  <div
+                    key={index}
+                    className="bg-slate-700 px-3 py-2 rounded-lg flex flex-col gap-1"
+                  >
                     <div className="flex items-center gap-2">
                       <span className="font-medium">{skill.name}</span>
-                      <button onClick={() => handleRemoveSkill(index)} className="text-red-400 hover:text-red-300 ml-2">×</button>
+                      <button
+                        onClick={() => handleRemoveSkill(index)}
+                        className="text-red-400 hover:text-red-300 ml-2"
+                      >
+                        ×
+                      </button>
                     </div>
                     <div className="text-xs text-slate-300">
-                      Confidence: <span className="text-purple-400">{skill.confidence || skill.level}</span>
+                      Confidence:{' '}
+                      <span className="text-purple-400">{skill.confidence || skill.level}</span>
                     </div>
                     {skill.evidence && skill.evidence.length > 0 && (
                       <div className="text-xs text-slate-400">
@@ -339,8 +374,15 @@ const ProfileSetupPage: React.FC = () => {
               </div>
             </div>
             <div className="mt-6 flex justify-between">
-              <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
-              <button onClick={nextStep} className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800">Next</button>
+              <button onClick={prevStep} className="text-slate-400 hover:text-white">
+                Back
+              </button>
+              <button
+                onClick={nextStep}
+                className="bg-neutral-900 px-4 py-2 rounded hover:bg-neutral-800"
+              >
+                Next
+              </button>
             </div>
           </motion.div>
         )}
@@ -354,18 +396,27 @@ const ProfileSetupPage: React.FC = () => {
                 <input
                   type="number"
                   value={formData.preferences.stipendMin}
-                  onChange={(e) => setFormData(prev => ({
-                    ...prev,
-                    preferences: { ...prev.preferences, stipendMin: Number(e.target.value) }
-                  }))}
+                  onChange={e =>
+                    setFormData(prev => ({
+                      ...prev,
+                      preferences: { ...prev.preferences, stipendMin: Number(e.target.value) },
+                    }))
+                  }
                   className="w-full bg-slate-800 border border-slate-700 rounded p-2"
                 />
               </div>
               {/* Add more preference fields as needed */}
             </div>
             <div className="mt-6 flex justify-between">
-              <button onClick={prevStep} className="text-slate-400 hover:text-white">Back</button>
-              <button onClick={handleSubmit} className="bg-neutral-900 px-6 py-2 rounded hover:bg-neutral-800 font-bold">Complete Profile</button>
+              <button onClick={prevStep} className="text-slate-400 hover:text-white">
+                Back
+              </button>
+              <button
+                onClick={handleSubmit}
+                className="bg-neutral-900 px-6 py-2 rounded hover:bg-neutral-800 font-bold"
+              >
+                Complete Profile
+              </button>
             </div>
           </motion.div>
         )}

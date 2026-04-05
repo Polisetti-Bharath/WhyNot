@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Sparkles, TrendingUp, AlertCircle, CheckCircle2, 
-  Clock, Target, Star, Zap, Award, ArrowRight,
-  BookOpen, GraduationCap, Building2, Users
+import {
+  Sparkles,
+  TrendingUp,
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  Target,
+  Star,
+  Zap,
+  Award,
+  ArrowRight,
+  BookOpen,
+  GraduationCap,
+  Building2,
+  Users,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useToast } from '../contexts/ToastContext';
@@ -46,19 +57,21 @@ interface SimulationResult {
 const CareerPathSimulatorPage: React.FC = () => {
   const { user } = useAuth();
   const { showToast } = useToast();
-  
+
   const [currentProfile, setCurrentProfile] = useState({
     cgpa: 0,
     skills: [] as Skill[],
-    eligibleOpportunities: 0
+    eligibleOpportunities: 0,
   });
-  
+
   const [simulationChanges, setSimulationChanges] = useState<SimulationChange[]>([]);
   const [newSkill, setNewSkill] = useState('');
-  const [newSkillLevel, setNewSkillLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>('Beginner');
+  const [newSkillLevel, setNewSkillLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced'>(
+    'Beginner'
+  );
   const [targetCgpa, setTargetCgpa] = useState('');
   const [certification, setCertification] = useState('');
-  
+
   const [simulationResult, setSimulationResult] = useState<SimulationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
@@ -94,7 +107,7 @@ const CareerPathSimulatorPage: React.FC = () => {
       setCurrentProfile({
         cgpa: profile?.cgpa || 0,
         skills: profile?.skills || [],
-        eligibleOpportunities: count || 0
+        eligibleOpportunities: count || 0,
       });
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -121,7 +134,7 @@ const CareerPathSimulatorPage: React.FC = () => {
 
     setSimulationChanges([
       ...simulationChanges,
-      { type: 'skill', value: newSkill, level: newSkillLevel }
+      { type: 'skill', value: newSkill, level: newSkillLevel },
     ]);
     setNewSkill('');
     setNewSkillLevel('Beginner');
@@ -152,7 +165,9 @@ const CareerPathSimulatorPage: React.FC = () => {
     }
 
     const certExists = simulationChanges.some(
-      change => change.type === 'certification' && change.value.toLowerCase() === certification.toLowerCase()
+      change =>
+        change.type === 'certification' &&
+        change.value.toLowerCase() === certification.toLowerCase()
     );
 
     if (certExists) {
@@ -160,10 +175,7 @@ const CareerPathSimulatorPage: React.FC = () => {
       return;
     }
 
-    setSimulationChanges([
-      ...simulationChanges,
-      { type: 'certification', value: certification }
-    ]);
+    setSimulationChanges([...simulationChanges, { type: 'certification', value: certification }]);
     setCertification('');
   };
 
@@ -188,7 +200,7 @@ const CareerPathSimulatorPage: React.FC = () => {
         if (change.type === 'skill') {
           simulatedSkills.push({
             name: change.value,
-            level: change.level || 'Beginner'
+            level: change.level || 'Beginner',
           });
         } else if (change.type === 'cgpa') {
           simulatedCgpa = parseFloat(change.value);
@@ -206,20 +218,25 @@ const CareerPathSimulatorPage: React.FC = () => {
       if (error) throw error;
 
       // Calculate current eligibility
-      const currentEligible = opportunities?.filter(opp => 
-        opp.min_cgpa <= currentProfile.cgpa
-      ).length || 0;
+      const currentEligible =
+        opportunities?.filter(opp => opp.min_cgpa <= currentProfile.cgpa).length || 0;
 
       // Calculate new eligibility
-      const newEligible = opportunities?.filter(opp => 
-        opp.min_cgpa <= simulatedCgpa
-      ).length || 0;
+      const newEligible = opportunities?.filter(opp => opp.min_cgpa <= simulatedCgpa).length || 0;
 
       // Calculate match score improvements for top companies
-      const topCompanies = ['TCS', 'Infosys', 'Wipro', 'Cognizant', 'Google', 'Amazon', 'Microsoft'];
+      const topCompanies = [
+        'TCS',
+        'Infosys',
+        'Wipro',
+        'Cognizant',
+        'Google',
+        'Amazon',
+        'Microsoft',
+      ];
       const matchScoreImprovements = topCompanies
         .map(company => {
-          const companyOpps = opportunities?.filter(opp => 
+          const companyOpps = opportunities?.filter(opp =>
             opp.company.toLowerCase().includes(company.toLowerCase())
           );
 
@@ -227,33 +244,31 @@ const CareerPathSimulatorPage: React.FC = () => {
 
           const opp = companyOpps[0];
           const requiredSkills = opp.required_skills || [];
-          
+
           // Calculate before match score
           const beforeMatchingSkills = currentProfile.skills.filter(skill =>
-            requiredSkills.some((rs: any) => 
-              rs.name?.toLowerCase() === skill.name.toLowerCase()
-            )
+            requiredSkills.some((rs: any) => rs.name?.toLowerCase() === skill.name.toLowerCase())
           ).length;
-          const beforeScore = requiredSkills.length > 0 
-            ? Math.round((beforeMatchingSkills / requiredSkills.length) * 100)
-            : 0;
+          const beforeScore =
+            requiredSkills.length > 0
+              ? Math.round((beforeMatchingSkills / requiredSkills.length) * 100)
+              : 0;
 
           // Calculate after match score
           const afterMatchingSkills = simulatedSkills.filter(skill =>
-            requiredSkills.some((rs: any) => 
-              rs.name?.toLowerCase() === skill.name.toLowerCase()
-            )
+            requiredSkills.some((rs: any) => rs.name?.toLowerCase() === skill.name.toLowerCase())
           ).length;
-          const afterScore = requiredSkills.length > 0 
-            ? Math.round((afterMatchingSkills / requiredSkills.length) * 100)
-            : 0;
+          const afterScore =
+            requiredSkills.length > 0
+              ? Math.round((afterMatchingSkills / requiredSkills.length) * 100)
+              : 0;
 
           if (beforeScore === afterScore) return null;
 
           return {
             company,
             before: beforeScore,
-            after: afterScore
+            after: afterScore,
           };
         })
         .filter(Boolean) as Array<{ company: string; before: number; after: number }>;
@@ -277,19 +292,22 @@ const CareerPathSimulatorPage: React.FC = () => {
 
       if (skillChanges.length > 0) {
         const topSkill = skillChanges[0];
-        const skillImpact = opportunities?.filter(opp => {
-          const requiredSkills = opp.required_skills || [];
-          return requiredSkills.some((rs: any) => 
-            rs.name?.toLowerCase() === topSkill.value.toLowerCase()
-          ) && opp.min_cgpa <= currentProfile.cgpa;
-        }).length || 0;
+        const skillImpact =
+          opportunities?.filter(opp => {
+            const requiredSkills = opp.required_skills || [];
+            return (
+              requiredSkills.some(
+                (rs: any) => rs.name?.toLowerCase() === topSkill.value.toLowerCase()
+              ) && opp.min_cgpa <= currentProfile.cgpa
+            );
+          }).length || 0;
 
         recommendedPath.push({
           priority: 1,
           action: `Add ${topSkill.value} (${topSkill.level})`,
           effort: '4 weeks effort',
           impact: `Unlocks ${skillImpact} immediate opportunities`,
-          immediateOpportunities: skillImpact
+          immediateOpportunities: skillImpact,
         });
       }
 
@@ -300,7 +318,7 @@ const CareerPathSimulatorPage: React.FC = () => {
           action: `Raise CGPA to ${cgpaChange.value}`,
           effort: '1 semester',
           impact: `Unlocks ${cgpaImpact} more (long-term)`,
-          longTermOpportunities: cgpaImpact
+          longTermOpportunities: cgpaImpact,
         });
       }
 
@@ -309,12 +327,12 @@ const CareerPathSimulatorPage: React.FC = () => {
       if (skillChanges.length > 0) {
         timeline.push({
           week: 'Week 1-4',
-          action: `${skillChanges[0].value} course + project`
+          action: `${skillChanges[0].value} course + project`,
         });
         timeline.push({
           week: 'Week 5',
           action: 'Apply to 8 newly matched roles',
-          probability: 'Interview probability: 65% → 80%'
+          probability: 'Interview probability: 65% → 80%',
         });
       }
 
@@ -324,7 +342,7 @@ const CareerPathSimulatorPage: React.FC = () => {
         matchScoreImprovements: matchScoreImprovements.slice(0, 3),
         unlockedFeatures,
         recommendedPath,
-        timeline
+        timeline,
       };
 
       setSimulationResult(result);
@@ -363,11 +381,11 @@ const CareerPathSimulatorPage: React.FC = () => {
 
   return (
     <PageTransition>
-      <SEO 
+      <SEO
         title="Career Path Simulator"
         description="Simulate what-if scenarios before making career decisions"
       />
-      
+
       <div className="min-h-screen bg-black relative overflow-hidden pt-28 pb-20 px-4 sm:px-6 lg:px-8">
         {/* Background Effects */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -376,7 +394,7 @@ const CareerPathSimulatorPage: React.FC = () => {
               scale: [1, 1.2, 1],
               opacity: [0.15, 0.25, 0.15],
             }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
             className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-purple-500/30 rounded-full blur-[120px]"
           />
           <motion.div
@@ -384,7 +402,7 @@ const CareerPathSimulatorPage: React.FC = () => {
               scale: [1, 1.3, 1],
               opacity: [0.1, 0.2, 0.1],
             }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 2 }}
+            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
             className="absolute bottom-0 right-1/4 w-[700px] h-[700px] bg-indigo-500/30 rounded-full blur-[120px]"
           />
           <motion.div
@@ -392,7 +410,7 @@ const CareerPathSimulatorPage: React.FC = () => {
               scale: [1, 1.1, 1],
               opacity: [0.1, 0.15, 0.1],
             }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 4 }}
+            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
             className="absolute top-1/3 right-1/3 w-[500px] h-[500px] bg-rose-500/20 rounded-full blur-[100px]"
           />
         </div>
@@ -416,10 +434,14 @@ const CareerPathSimulatorPage: React.FC = () => {
               </span>
             </motion.div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-4 leading-tight">
-              Career Path <span className="bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 bg-clip-text text-transparent">Simulator</span>
+              Career Path{' '}
+              <span className="bg-gradient-to-r from-purple-400 via-indigo-400 to-pink-400 bg-clip-text text-transparent">
+                Simulator
+              </span>
             </h1>
             <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-              Simulate "What if?" scenarios before making career decisions and see real-time impact on your opportunities
+              Simulate "What if?" scenarios before making career decisions and see real-time impact
+              on your opportunities
             </p>
           </motion.div>
 
@@ -437,13 +459,15 @@ const CareerPathSimulatorPage: React.FC = () => {
                   <Users className="w-5 h-5 text-indigo-400" />
                   <h2 className="text-xl font-bold text-white">Your Current Profile</h2>
                 </div>
-                
+
                 <div className="space-y-3">
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
                     <span className="text-slate-400">CGPA:</span>
-                    <span className="text-white font-semibold">{currentProfile.cgpa.toFixed(2)}</span>
+                    <span className="text-white font-semibold">
+                      {currentProfile.cgpa.toFixed(2)}
+                    </span>
                   </div>
-                  
+
                   <div className="p-3 bg-white/5 rounded-lg border border-white/5">
                     <span className="text-slate-400 block mb-2">Skills:</span>
                     <div className="flex flex-wrap gap-2">
@@ -461,7 +485,7 @@ const CareerPathSimulatorPage: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between p-3 bg-white/5 rounded-lg border border-white/5">
                     <span className="text-slate-400">Eligible for:</span>
                     <span className="text-green-400 font-semibold">
@@ -488,14 +512,14 @@ const CareerPathSimulatorPage: React.FC = () => {
                       <input
                         type="text"
                         value={newSkill}
-                        onChange={(e) => setNewSkill(e.target.value)}
+                        onChange={e => setNewSkill(e.target.value)}
                         placeholder="e.g., SQL, React, AWS"
                         className="flex-1 px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                        onKeyPress={(e) => e.key === 'Enter' && addSkillChange()}
+                        onKeyPress={e => e.key === 'Enter' && addSkillChange()}
                       />
                       <select
                         value={newSkillLevel}
-                        onChange={(e) => setNewSkillLevel(e.target.value as any)}
+                        onChange={e => setNewSkillLevel(e.target.value as any)}
                         className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                       >
                         <option value="Beginner">Beginner</option>
@@ -524,10 +548,10 @@ const CareerPathSimulatorPage: React.FC = () => {
                       min="0"
                       max="10"
                       value={targetCgpa}
-                      onChange={(e) => setTargetCgpa(e.target.value)}
+                      onChange={e => setTargetCgpa(e.target.value)}
                       placeholder="e.g., 7.5"
                       className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      onKeyPress={(e) => e.key === 'Enter' && addCgpaChange()}
+                      onKeyPress={e => e.key === 'Enter' && addCgpaChange()}
                     />
                     <Button
                       onClick={addCgpaChange}
@@ -547,10 +571,10 @@ const CareerPathSimulatorPage: React.FC = () => {
                     <input
                       type="text"
                       value={certification}
-                      onChange={(e) => setCertification(e.target.value)}
+                      onChange={e => setCertification(e.target.value)}
                       placeholder="e.g., AWS Certified Developer"
                       className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      onKeyPress={(e) => e.key === 'Enter' && addCertificationChange()}
+                      onKeyPress={e => e.key === 'Enter' && addCertificationChange()}
                     />
                     <Button
                       onClick={addCertificationChange}
@@ -565,7 +589,9 @@ const CareerPathSimulatorPage: React.FC = () => {
                   {/* Selected Changes */}
                   {simulationChanges.length > 0 && (
                     <div className="mt-6 p-4 bg-white/5 rounded-lg border border-white/10">
-                      <h3 className="text-sm font-semibold text-slate-300 mb-3">Selected Changes:</h3>
+                      <h3 className="text-sm font-semibold text-slate-300 mb-3">
+                        Selected Changes:
+                      </h3>
                       <div className="space-y-2">
                         {simulationChanges.map((change, idx) => (
                           <div
@@ -573,7 +599,8 @@ const CareerPathSimulatorPage: React.FC = () => {
                             className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/5"
                           >
                             <span className="text-white text-sm">
-                              {change.type === 'skill' && `Add skill: ${change.value} (${change.level})`}
+                              {change.type === 'skill' &&
+                                `Add skill: ${change.value} (${change.level})`}
                               {change.type === 'cgpa' && `Raise CGPA to: ${change.value}`}
                               {change.type === 'certification' && `Complete: ${change.value}`}
                             </span>
@@ -601,11 +628,7 @@ const CareerPathSimulatorPage: React.FC = () => {
                       Run Simulation
                     </Button>
                     {simulationResult && (
-                      <Button
-                        onClick={resetSimulation}
-                        variant="outline"
-                        className="px-6"
-                      >
+                      <Button onClick={resetSimulation} variant="outline" className="px-6">
                         Reset
                       </Button>
                     )}
@@ -633,9 +656,7 @@ const CareerPathSimulatorPage: React.FC = () => {
                   >
                     <TrendingUp className="w-10 h-10 text-purple-400" />
                   </motion.div>
-                  <h3 className="text-xl font-bold text-white mb-3">
-                    No Simulation Yet
-                  </h3>
+                  <h3 className="text-xl font-bold text-white mb-3">No Simulation Yet</h3>
                   <p className="text-slate-400">
                     Add changes on the left and click "Run Simulation" to see the results
                   </p>
@@ -664,7 +685,8 @@ const CareerPathSimulatorPage: React.FC = () => {
                       <div className="p-4 bg-white/5 rounded-xl border border-white/10">
                         <p className="text-slate-400 text-sm mb-1">Total Eligible</p>
                         <p className="text-3xl font-bold text-indigo-400">
-                          {simulationResult.currentOpportunities + simulationResult.newOpportunities}
+                          {simulationResult.currentOpportunities +
+                            simulationResult.newOpportunities}
                         </p>
                         <p className="text-slate-500 text-xs mt-1">opportunities</p>
                       </div>
@@ -680,9 +702,14 @@ const CareerPathSimulatorPage: React.FC = () => {
                       </h3>
                       <div className="space-y-3">
                         {simulationResult.matchScoreImprovements.map((improvement, idx) => (
-                          <div key={idx} className="p-4 bg-white/5 rounded-lg border border-white/5">
+                          <div
+                            key={idx}
+                            className="p-4 bg-white/5 rounded-lg border border-white/5"
+                          >
                             <div className="flex items-center justify-between mb-2">
-                              <span className="font-semibold text-white">{improvement.company}</span>
+                              <span className="font-semibold text-white">
+                                {improvement.company}
+                              </span>
                               <span className="text-green-400 text-sm font-medium">
                                 +{improvement.after - improvement.before}%
                               </span>
@@ -784,7 +811,10 @@ const CareerPathSimulatorPage: React.FC = () => {
                       </h3>
                       <div className="space-y-3">
                         {simulationResult.timeline.map((item, idx) => (
-                          <div key={idx} className="p-4 bg-white/5 rounded-lg border border-white/5">
+                          <div
+                            key={idx}
+                            className="p-4 bg-white/5 rounded-lg border border-white/5"
+                          >
                             <div className="flex items-center justify-between mb-1">
                               <span className="font-semibold text-indigo-400">{item.week}</span>
                             </div>

@@ -23,7 +23,7 @@ const ForgotPasswordPage: React.FC = () => {
       });
 
       if (error) throw error;
-      
+
       setSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to send reset email. Please try again.');
@@ -39,13 +39,13 @@ const ForgotPasswordPage: React.FC = () => {
         <div className="fixed inset-0 z-0">
           <ThreeScene />
         </div>
-        
+
         <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-neon-purple/10 via-transparent to-transparent -z-10" />
-        
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, ease: 'easeOut' }}
           className="relative z-10 w-full max-w-md"
         >
           {/* Logo */}
@@ -53,7 +53,9 @@ const ForgotPasswordPage: React.FC = () => {
             <Link to="/" className="inline-flex items-center gap-3 group">
               <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-rose-500 via-purple-500 to-indigo-500 p-[2px] shadow-lg shadow-purple-500/50">
                 <div className="w-full h-full rounded-xl bg-black flex items-center justify-center">
-                  <span className="text-xl font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">W</span>
+                  <span className="text-xl font-bold bg-gradient-to-r from-rose-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                    W
+                  </span>
                 </div>
               </div>
               <span className="text-3xl font-bold tracking-tight bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent group-hover:from-rose-400 group-hover:to-purple-400 transition-all">
@@ -64,7 +66,7 @@ const ForgotPasswordPage: React.FC = () => {
               Forgot Password?
             </h1>
             <p className="text-slate-300 drop-shadow-[0_0_4px_rgba(0,0,0,0.8)]">
-              {success ? "Check your email" : "We'll send you a reset link"}
+              {success ? 'Check your email' : "We'll send you a reset link"}
             </p>
           </div>
 
@@ -74,7 +76,7 @@ const ForgotPasswordPage: React.FC = () => {
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
                 className="text-center py-8"
               >
                 <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -82,10 +84,12 @@ const ForgotPasswordPage: React.FC = () => {
                 </div>
                 <h3 className="text-xl font-semibold text-white mb-2">Email Sent!</h3>
                 <p className="text-slate-300 mb-6">
-                  We've sent a password reset link to <span className="font-semibold text-neon-purple">{email}</span>
+                  We've sent a password reset link to{' '}
+                  <span className="font-semibold text-neon-purple">{email}</span>
                 </p>
                 <p className="text-sm text-slate-400 mb-6">
-                  Click the link in the email to reset your password. The link will expire in 1 hour.
+                  Click the link in the email to reset your password. The link will expire in 1
+                  hour.
                 </p>
                 <Link
                   to="/login"
@@ -102,7 +106,7 @@ const ForgotPasswordPage: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                     className="flex items-center gap-2 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400"
                   >
                     <AlertCircle className="w-5 h-5 flex-shrink-0" />
@@ -126,7 +130,7 @@ const ForgotPasswordPage: React.FC = () => {
                       type="email"
                       required
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                       className="w-full pl-11 pr-4 py-3 glass-panel rounded-lg text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-neon-purple/50 focus:border-neon-purple/50 transition-all"
                       placeholder="student@college.edu"
                     />

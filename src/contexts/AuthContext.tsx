@@ -8,7 +8,13 @@ interface AuthContextType {
   loading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signInWithGoogle: () => Promise<void>;
-  signUp: (email: string, password: string, name: string, role: UserRole, additionalData?: any) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    name: string,
+    role: UserRole,
+    additionalData?: any
+  ) => Promise<void>;
   signOut: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -39,27 +45,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }, 10000);
 
     // Check active sessions and sets the user
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-      
-      clearTimeout(loadingTimeout);
-      if (session?.user) {
-        fetchUserProfile(session.user.id);
-      } else {
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        if (!mounted) return;
+
+        clearTimeout(loadingTimeout);
+        if (session?.user) {
+          fetchUserProfile(session.user.id);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(error => {
+        if (!mounted) return;
+
+        console.error('Auth session error:', error);
+        clearTimeout(loadingTimeout);
         setLoading(false);
-      }
-    }).catch((error) => {
-      if (!mounted) return;
-      
-      console.error('Auth session error:', error);
-      clearTimeout(loadingTimeout);
-      setLoading(false);
-    });
+      });
 
     // Listen for changes on auth state (sign in, sign out, etc.)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
-      
+
       if (session?.user) {
         fetchUserProfile(session.user.id);
       } else {
@@ -78,7 +89,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const fetchUserProfile = async (userId: string) => {
     try {
       const data = await api.getStudentProfile(userId);
-      
+
       if (data) {
         setUser({
           id: data.id,
@@ -100,7 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.warn('No profile found for user:', userId);
         setUser(null);
         // Do not sign out here, as it prevents profile creation flows
-        // await supabase.auth.signOut(); 
+        // await supabase.auth.signOut();
         throw new Error('Profile not found');
       }
     } catch (error) {
@@ -120,7 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       });
 
       if (error) throw error;
-      
+
       if (data.user) {
         await fetchUserProfile(data.user.id);
       }
@@ -170,7 +181,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         });
 
         if (profileError) throw profileError;
-        
+
         await fetchUserProfile(data.user.id);
       }
     } catch (error: any) {
@@ -193,7 +204,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const refreshUser = async () => {
-    const { data: { session } } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
     if (session?.user) {
       await fetchUserProfile(session.user.id);
     }
