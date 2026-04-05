@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@google/genai": "^1.34.0",
+    "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.15",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.5.0",
     "@supabase/supabase-js": "^2.89.0",
