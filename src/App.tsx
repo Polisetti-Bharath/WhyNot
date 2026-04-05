@@ -18,6 +18,7 @@ const SignupPage = lazy(() => import('./pages/SignupPage'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ProfileSetupPage = lazy(() => import('./pages/ProfileSetupPage'));
 const OpportunitiesPage = lazy(() => import('./pages/OpportunitiesPage'));
+const ExternalJobsPage = lazy(() => import('./pages/ExternalJobsPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PlacementDashboard = lazy(() => import('./pages/PlacementDashboard'));
 const PostOpportunityPage = lazy(() => import('./pages/PostOpportunityPage'));
@@ -124,6 +125,15 @@ const App: React.FC = () => {
                     element={
                       <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
                         <OpportunitiesPage />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  <Route
+                    path="/external-jobs"
+                    element={
+                      <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
+                        <ExternalJobsPage />
                       </ProtectedRoute>
                     }
                   />

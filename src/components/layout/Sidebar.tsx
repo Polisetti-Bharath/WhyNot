@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Home, Briefcase, Settings, LogOut, 
-  Calendar, BarChart3, Users, Sparkles, Zap, Menu, X, TrendingUp
+  Calendar, BarChart3, Users, Sparkles, Zap, Menu, X, TrendingUp, ExternalLink
 } from 'lucide-react';
 import { UserRole } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
@@ -41,6 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         return [
           { label: 'Dashboard', path: '/dashboard', icon: Home, gradient: 'from-cyan-400 to-blue-500' },
           { label: 'Opportunities', path: '/opportunities', icon: Briefcase, gradient: 'from-purple-400 to-pink-500' },
+          { label: 'External Jobs', path: '/external-jobs', icon: ExternalLink, gradient: 'from-blue-400 to-cyan-500' },
           { label: 'Career Simulator', path: '/career-simulator', icon: TrendingUp, gradient: 'from-purple-400 to-indigo-500', badge: 'NEW' },
           { label: 'Calendar', path: '/calendar', icon: Calendar, gradient: 'from-green-400 to-emerald-500' },
           { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3, gradient: 'from-yellow-400 to-orange-500' },

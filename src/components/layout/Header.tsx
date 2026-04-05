@@ -13,6 +13,7 @@ import {
   BarChart3,
   UserCheck,
   BookOpen,
+  ExternalLink,
 } from 'lucide-react';
 import { UserRole } from '../../types';
 import { useAuth } from '../../contexts/AuthContext';
@@ -54,6 +55,7 @@ const Header: React.FC<HeaderProps> = ({
         return [
           { label: 'Dashboard', path: '/dashboard', icon: Home },
           { label: 'Opportunities', path: '/opportunities', icon: Briefcase },
+          { label: 'External Jobs', path: '/external-jobs', icon: ExternalLink },
           { label: 'Calendar', path: '/calendar', icon: Calendar },
           { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3 },
         ];
