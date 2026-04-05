@@ -13,7 +13,6 @@ import {
   RejectionAnalysis
 } from '../../services/geminiService';
 import { supabase } from '../../services/supabaseClient';
-import { exportRejectionAnalysisPDF } from '../../utils/pdfExport';
 
 interface RejectionAnalysisHubProps {
   isOpen: boolean;
@@ -253,46 +252,6 @@ Sentiment: ${explanation.sentiment}
     a.download = `rejection-analysis-${application.job.company}-${Date.now()}.txt`;
     a.click();
     URL.revokeObjectURL(url);
-  };
-
-  // New PDF export function
-  const handleExportPDF = () => {
-    if (mode === 'single' && application && explanation) {
-      // Single application analysis
-      exportRejectionAnalysisPDF({
-        userName: student.name,
-        totalApplications: 1,
-        rejections: 1,
-        rejectionRate: 100,
-        commonReasons: [
-          {
-            reason: explanation.coreMismatch,
-            count: 1,
-            percentage: 100,
-          },
-        ],
-        insights: [explanation.coreMismatch, ...explanation.improvementSuggestions],
-        recommendations: explanation.actionPlan,
-        skillGaps: explanation.keyMissingSkills,
-      });
-    } else if (mode === 'bulk' && patternAnalysis) {
-      // Bulk analysis
-      const totalRejections = applications.filter(a => a.status === 'REJECTED').length;
-      exportRejectionAnalysisPDF({
-        userName: student.name,
-        totalApplications: applications.length,
-        rejections: totalRejections,
-        rejectionRate: (totalRejections / applications.length) * 100,
-        commonReasons: patternAnalysis.commonReasons.map((reason, index) => ({
-          reason,
-          count: Math.floor((totalRejections * (50 - index * 10)) / 100),
-          percentage: 50 - index * 10,
-        })),
-        insights: patternAnalysis.overallInsights,
-        recommendations: patternAnalysis.strategicRecommendations,
-        skillGaps: patternAnalysis.skillGaps,
-      });
-    }
   };
 
   if (!isOpen) return null;
@@ -652,14 +611,6 @@ Sentiment: ${explanation.sentiment}
                           >
                             <Download className="w-4 h-4" />
                             Export TXT
-                          </button>
-                          <button
-                            onClick={handleExportPDF}
-                            className="flex-1 px-4 py-3 bg-gradient-to-r from-neon-purple to-neon-pink rounded-lg text-white font-semibold hover:shadow-lg hover:shadow-neon-purple/50 transition-all flex items-center justify-center gap-2"
-                            title="Export as PDF"
-                          >
-                            <FileText className="w-4 h-4" />
-                            Export PDF
                           </button>
                         </div>
                       </motion.div>

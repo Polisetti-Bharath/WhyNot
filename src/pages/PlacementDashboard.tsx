@@ -311,34 +311,8 @@ const PlacementDashboard: React.FC = () => {
                 </motion.div>
               </Link>
             </div>
-
-            {/* Calendar */}
-            <div className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Link to="/calendar">
-                <motion.div whileHover={{ y: -4 }} className="relative group h-full">
-                  <div className="absolute -inset-[1px] bg-gradient-to-br from-indigo-500 to-blue-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
-                  <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-indigo-500/30 transition-all">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-500 p-[1px] flex-shrink-0">
-                        <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                          <Calendar className="w-6 h-6 text-indigo-400" />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-white mb-1">Calendar</h3>
-                        <p className="text-sm text-slate-400 mb-3">
-                          Schedule interviews and events
-                        </p>
-                        <div className="flex items-center text-sm text-indigo-400 font-semibold">
-                          Open Calendar{' '}
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            </div>
+            
+            {/* Quick Actions (replaced Calendar link logic to balance layout if needed or just empty) */}
 
             {/* Profile */}
             <div className="col-span-12 md:col-span-6 lg:col-span-4">

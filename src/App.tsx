@@ -19,17 +19,11 @@ const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ProfileSetupPage = lazy(() => import('./pages/ProfileSetupPage'));
 const OpportunitiesPage = lazy(() => import('./pages/OpportunitiesPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
-const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const PlacementDashboard = lazy(() => import('./pages/PlacementDashboard'));
 const PostOpportunityPage = lazy(() => import('./pages/PostOpportunityPage'));
 const ManageOpportunitiesPage = lazy(() => import('./pages/ManageOpportunitiesPage'));
-const CalendarPage = lazy(() => import('./pages/CalendarPage'));
 const ResumeAnalyzerPage = lazy(() => import('./pages/ResumeAnalyzerPage'));
 const CareerPathSimulatorPage = lazy(() => import('./pages/CareerPathSimulatorPage'));
-const HelpCenterPage = lazy(() => import('./pages/HelpCenterPage'));
-const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
-const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
-const ContactSupportPage = lazy(() => import('./pages/ContactSupportPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const App: React.FC = () => {
@@ -198,16 +192,6 @@ const App: React.FC = () => {
                     }
                   />
 
-                  {/* Calendar Route - accessible to all authenticated users */}
-                  <Route
-                    path="/calendar"
-                    element={
-                      <ProtectedRoute userRole={user?.role}>
-                        <CalendarPage />
-                      </ProtectedRoute>
-                    }
-                  />
-
                   {/* Resume Analyzer Route - accessible to all authenticated users */}
                   <Route
                     path="/resume-analyzer"
@@ -227,22 +211,6 @@ const App: React.FC = () => {
                       </ProtectedRoute>
                     }
                   />
-
-                  {/* Settings Route - accessible to all authenticated users */}
-                  <Route
-                    path="/settings"
-                    element={
-                      <ProtectedRoute userRole={user?.role}>
-                        <SettingsPage />
-                      </ProtectedRoute>
-                    }
-                  />
-
-                  {/* Help Center, Privacy Policy, Terms of Service, and Contact Support - accessible to all users */}
-                  <Route path="/help-center" element={<HelpCenterPage />} />
-                  <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
-                  <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-                  <Route path="/contact-support" element={<ContactSupportPage />} />
 
                   {/* 404 Not Found */}
                   <Route path="*" element={<NotFoundPage />} />

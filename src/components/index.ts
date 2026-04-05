@@ -26,11 +26,9 @@ export { default as Sidebar } from './layout/Sidebar';
 
 // Modal Components
 export { default as ApplyModal } from './modals/ApplyModal';
-export { default as EventModal } from './modals/EventModal';
 export { default as ExplanationModal } from './modals/ExplanationModal';
 
 // Feature-Specific Components
-export { default as CalendarGrid } from './features/CalendarGrid';
 export { default as RejectionAnalysisHub } from './features/RejectionAnalysisHub';
 export { default as ResumeAnalysisCard } from './features/ResumeAnalysisCard';
 export { default as ResumeUpload } from './features/ResumeUpload';

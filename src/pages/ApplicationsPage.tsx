@@ -6,7 +6,6 @@ import { useAuth } from '../contexts/AuthContext';
 import PageTransition from '../components/common/PageTransition';
 import RejectionAnalysisHub from '../components/features/RejectionAnalysisHub';
 import { useToast } from '../contexts/ToastContext';
-import { exportApplicationHistoryPDF } from '../utils/pdfExport';
 
 const ApplicationsPage: React.FC = () => {
   const { user } = useAuth();
@@ -61,34 +60,6 @@ const ApplicationsPage: React.FC = () => {
   const openBulkAnalysis = () => {
     setAnalysisMode('bulk');
     setShowAnalysisHub(true);
-  };
-
-  const handleExportPDF = () => {
-    if (applications.length === 0) {
-      showToast('error', 'No applications to export');
-      return;
-    }
-
-    const summary = {
-      total: applications.length,
-      pending: applications.filter(a => a.status === 'PENDING').length,
-      accepted: applications.filter(a => a.status === 'ACCEPTED').length,
-      rejected: applications.filter(a => a.status === 'REJECTED').length,
-    };
-
-    exportApplicationHistoryPDF({
-      userName: user?.name || 'Student',
-      applications: applications.map(app => ({
-        company: app.job?.company || 'N/A',
-        position: app.job?.role || 'N/A',
-        appliedDate: new Date(app.applied_at).toLocaleDateString(),
-        status: app.status,
-        lastUpdate: new Date(app.updated_at || app.applied_at).toLocaleDateString(),
-      })),
-      summary,
-    });
-
-    showToast('success', 'Application history exported successfully!');
   };
 
   const rejectedCount = applications.filter(app => app.status === 'REJECTED').length;
@@ -149,16 +120,6 @@ const ApplicationsPage: React.FC = () => {
               <p className="text-slate-400 text-lg">Track the status of your internship and placement applications</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              {applications.length > 0 && (
-                <button
-                  onClick={handleExportPDF}
-                  className="flex items-center gap-2 px-5 py-3 bg-slate-700 hover:bg-slate-600 text-white font-semibold rounded-xl transition-all"
-                  title="Export application history as PDF"
-                >
-                  <Download className="w-5 h-5" />
-                  Export PDF
-                </button>
-              )}
               {rejectedCount > 1 && (
                 <button
                   onClick={openBulkAnalysis}

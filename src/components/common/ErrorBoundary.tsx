@@ -16,7 +16,9 @@ interface State {
 /**
  * Enhanced Error Boundary component with improved error handling and accessibility
  */
-class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundary extends React.Component<Props, State> {
+  public state: State;
+  
   constructor(props: Props) {
     super(props);
     this.state = {

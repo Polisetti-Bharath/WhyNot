@@ -430,14 +430,6 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <p className="text-sm text-slate-400">Track student placement status and interview progress</p>
                   </div>
-
-                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Calendar className="w-5 h-5 text-emerald-400" />
-                      <span className="font-semibold text-white">Manage Calendar</span>
-                    </div>
-                    <p className="text-sm text-slate-400">Schedule campus drives, deadlines, and announcements</p>
-                  </div>
                 </div>
               </div>
             </motion.div>

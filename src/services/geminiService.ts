@@ -37,6 +37,10 @@ export interface RejectionAnalysis {
   resumeFeedback: string[];
   actionPlan: string[];
   sentiment: string;
+  type?: 'RULE_BASED' | 'NON_RULE_BASED';
+  violations?: Array<{category: string, description: string, expected: string, actual: string}>;
+  skillGaps?: Array<{skill: string, required: string, studentLevel?: string, suggestion: string}>;
+  improvementSuggestions?: string[];
 }
 
 /**

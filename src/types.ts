@@ -24,6 +24,7 @@ export interface AuthUser {
   preferences?: any;
   resume?: string;
   resume_url?: string;
+  placementStatus?: 'unplaced' | 'placed' | 'in-process';
 }
 
 export enum UserRole {
@@ -110,6 +111,12 @@ export interface JobOpportunity {
 }
 
 export interface Application {
+  // DB fields mapped from Supabase
+  opportunity?: any;
+  created_at?: string;
+  interview_date?: string;
+  interview_time?: string;
+
   id: string;
   jobId: string;
   job: JobOpportunity;
