@@ -37,8 +37,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     console.error('Error caught by boundary:', error, errorInfo);
 
     // Log to error tracking service (e.g., Sentry) in production
-    if (process.env.NODE_ENV === 'production') {
-      // logErrorToService(error, errorInfo);
+      if (import.meta.env.PROD) {
     }
 
     this.setState({ errorInfo });
@@ -91,7 +90,7 @@ class ErrorBoundary extends React.Component<Props, State> {
                 </p>
               )}
 
-              {this.state.error && process.env.NODE_ENV === 'development' && (
+              {this.state.error && import.meta.env.DEV && (
                 <details className="mt-6 text-left">
                   <summary className="cursor-pointer text-sm text-slate-500 hover:text-slate-400 mb-2 focus:outline-none focus:ring-2 focus:ring-purple-500 rounded px-2 py-1">
                     Technical Details (Development Only)
