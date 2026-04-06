@@ -142,7 +142,7 @@ export const getUserFriendlyMessage = (error: ErrorDetails): string => {
 export const logError = (error: unknown, context?: string) => {
   const errorDetails = parseError(error);
 
-    if (import.meta.env.DEV) {
+  if (import.meta.env.DEV) {
     console.group(`❌ Error${context ? ` in ${context}` : ''}`);
     console.error('Message:', errorDetails.message);
     if (errorDetails.code) console.error('Code:', errorDetails.code);
