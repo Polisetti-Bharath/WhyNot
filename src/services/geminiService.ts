@@ -58,13 +58,19 @@ export const generateRejectionExplanation = async (
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const prompt = `You are an expert career coach. Analyze this rejection to provide actionable feedback in JSON format.
       Job: ${data.jobRole} at ${data.jobCompany}
-      Candidate Skills: ${data.skillConfidenceData?.map(s => s.name).join(', ')}
+      Candidate Skills: ${data.studentSkills?.join(', ')}
       Required Skills: ${data.jobRequiredSkills?.join(', ')}
       Ensure response is ONLY valid JSON with keys: "coreMismatch", "keyMissingSkills" (array), "resumeFeedback" (array), "actionPlan" (array), "sentiment" (text). 
       No markdown formatting in response.`;
 
     const result = await model.generateContent(prompt);
-    const text = result.response.text().replace(/`{3}json|`{3}/g, '');
+
+    // Robust JSON extraction
+    let text = result.response.text();
+    const jsonMatch = text.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (jsonMatch) text = jsonMatch[0];
+    text = text.replace(/`{3}json|`{3}/g, '').trim();
+
     return JSON.parse(text) as RejectionAnalysis;
   } catch (error) {
     console.error('Gemini API Error, falling back to HF:', error);
@@ -124,7 +130,12 @@ export const analyzeResume = async (
     Resume: ${resumeText.substring(0, 2000)}`;
 
     const result = await model.generateContent(prompt);
-    const text = result.response.text().replace(/`{3}json|`{3}/g, '');
+
+    let text = result.response.text();
+    const jsonMatch = text.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+    if (jsonMatch) text = jsonMatch[0];
+    text = text.replace(/`{3}json|`{3}/g, '').trim();
+
     return JSON.parse(text);
   } catch (error) {
     console.error('Gemini API Error, falling back to HF:', error);

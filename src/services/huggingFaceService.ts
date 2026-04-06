@@ -22,21 +22,25 @@ const checkRateLimit = (userId: string): boolean => {
 };
 
 const extractJSON = (text: string): any => {
-  const jsonMatch = text.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
-  if (jsonMatch) {
+  let cleaned = text;
+  const jsonMatch = cleaned.match(/\{[\s\S]*\}|\[[\s\S]*\]/);
+  if (jsonMatch) cleaned = jsonMatch[0];
+
+  cleaned = cleaned.replace(/`{3}json|`{3}/g, '').trim();
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (e) {
     try {
-      return JSON.parse(jsonMatch[0]);
-    } catch (e) {
-      try {
-        const cleaned = jsonMatch[0]
-          .replace(/,(\s*[}\]])/g, '$1')
-          .replace(/\n/g, ' ')
-          .replace(/\s+/g, ' ');
-        return JSON.parse(cleaned);
-      } catch (e2) {}
+      const fixed = cleaned
+        .replace(/,(\s*[}\]])/g, '$1')
+        .replace(/\n/g, ' ')
+        .replace(/\s+/g, ' ');
+      return JSON.parse(fixed);
+    } catch (e2) {
+      throw new Error('No valid JSON found in response');
     }
   }
-  throw new Error('No valid JSON found in response');
 };
 
 export const generateRejectionExplanation = async (

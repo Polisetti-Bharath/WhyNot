@@ -69,7 +69,8 @@ export const fetchExternalJobs = async (
 ): Promise<ExternalJob[]> => {
   const apiKey = import.meta.env.VITE_RAPIDAPI_KEY;
 
-  if (!apiKey) {
+  if (!apiKey || apiKey === 'YOUR_RAPID_API_KEY_HERE') {
+    console.warn('VITE_RAPIDAPI_KEY is missing in .env. Falling back to mock jobs data.');
     return fetchFallbackJobs(query);
   }
 

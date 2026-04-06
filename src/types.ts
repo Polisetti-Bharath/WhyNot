@@ -147,6 +147,7 @@ export interface Application {
 }
 
 export interface ExplanationRequest {
+  matchScore?: number;
   studentName: string;
   studentSkills: string[];
   studentCgpa: number;
