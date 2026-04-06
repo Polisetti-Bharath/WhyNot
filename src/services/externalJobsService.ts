@@ -154,75 +154,12 @@ const fetchFallbackJobs = async (query?: string): Promise<ExternalJob[]> => {
       roleCategory: determineRoleCategory(job.title),
     }));
 
-    // Generate mock jobs from other platforms (LinkedIn, Indeed, etc.) to show variety
-    const mockCompanies = [
-      'Google',
-      'Microsoft',
-      'Amazon',
-      'Meta',
-      'Netflix',
-      'Tesla',
-      'Apple',
-      'Spotify',
-      'Airbnb',
-      'Uber',
-    ];
-    const mockRoles = [
-      'Frontend Engineer',
-      'Backend Developer',
-      'Full Stack Engineer',
-      'Data Scientist',
-      'DevOps Engineer',
-      'Machine Learning Engineer',
-      'Product Manager',
-      'iOS Developer',
-      'Android Engineer',
-    ];
-    const mockSources = ['LinkedIn', 'Indeed', 'Glassdoor', 'Google Jobs', 'Wellfound'];
-    const mockLocations = [
-      'Bangalore, India',
-      'Hyderabad, India',
-      'Pune, India',
-      'Remote',
-      'London, UK',
-      'New York, USA',
-      'San Francisco, USA',
-      'Berlin, Germany',
-    ];
-
-    const mockJobsCount = query ? 10 : 30; // Inject more mock jobs if there is no query constraint
-    const mockJobs: ExternalJob[] = Array.from({ length: mockJobsCount }).map((_, i) => {
-      const company = mockCompanies[Math.floor(Math.random() * mockCompanies.length)];
-      const title = mockRoles[Math.floor(Math.random() * mockRoles.length)];
-      const source = mockSources[Math.floor(Math.random() * mockSources.length)];
-      const location = mockLocations[Math.floor(Math.random() * mockLocations.length)];
-
-      return {
-        id: `mock-${source.toLowerCase()}-${i}-${Date.now()}`,
-        title: query ? `${query} (Matched Role)` : title, // Soft match for the UI filtering
-        company,
-        location,
-        type: Math.random() > 0.3 ? 'Full-time' : 'Contract',
-        source,
-        description: `Join ${company} as a ${title}. You will be responsible for building scalable solutions and driving technical innovation. We are looking for passionate individuals with a strong background in software engineering...`,
-        applyLink: `https://mock-apply-link.com/${company.toLowerCase()}`,
-        postedAt: new Date(
-          Date.now() - Math.floor(Math.random() * 1000000000)
-        ).toLocaleDateString(),
-        salary: Math.random() > 0.5 ? '$120k - $160k' : 'Not Disclosed',
-        roleCategory: determineRoleCategory(query ? query : title),
-      };
-    });
-
-    // Combine Remotive and Mock jobs
-    const combinedJobs = [...fetchedJobs, ...mockJobs];
-
-    combinedJobs.sort(
+    fetchedJobs.sort(
       (a: ExternalJob, b: ExternalJob) =>
         new Date(b.postedAt).getTime() - new Date(a.postedAt).getTime()
     );
 
-    return combinedJobs.slice(0, 200);
+    return fetchedJobs.slice(0, 200);
   } catch (error) {
     return [];
   }
