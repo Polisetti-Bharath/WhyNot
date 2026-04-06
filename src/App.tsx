@@ -25,6 +25,7 @@ const PostOpportunityPage = lazy(() => import('./pages/PostOpportunityPage'));
 const ManageOpportunitiesPage = lazy(() => import('./pages/ManageOpportunitiesPage'));
 const ResumeAnalyzerPage = lazy(() => import('./pages/ResumeAnalyzerPage'));
 const CareerPathSimulatorPage = lazy(() => import('./pages/CareerPathSimulatorPage'));
+const CalendarPage = lazy(() => import('./pages/CalendarPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
 
 const App: React.FC = () => {
@@ -218,6 +219,16 @@ const App: React.FC = () => {
                     element={
                       <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
                         <CareerPathSimulatorPage />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  {/* 404 Not Found */}
+                  <Route
+                    path="/calendar"
+                    element={
+                      <ProtectedRoute>
+                        <CalendarPage />
                       </ProtectedRoute>
                     }
                   />
