@@ -27,6 +27,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabaseClient';
 import { Application, JobOpportunity } from '../types';
 import RejectionAnalysisHub from '../components/features/RejectionAnalysisHub';
+import CalendarWidget from '../components/features/CalendarWidget';
 import PageTransition from '../components/common/PageTransition';
 import { useToast } from '../contexts/ToastContext';
 
@@ -445,12 +446,12 @@ const StudentDashboard: React.FC = () => {
               </div>
             ))}
 
-            {/* Activity Feed - Full Width Card */}
+            {/* Activity Feed - Calendar Side by Side */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.6, ease: 'easeOut' }}
-              className="col-span-12"
+              className="col-span-12 md:col-span-7"
             >
               <div className="relative glass-panel rounded-2xl p-6 h-full overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2" />
@@ -484,6 +485,16 @@ const StudentDashboard: React.FC = () => {
                   ))}
                 </div>
               </div>
+            </motion.div>
+
+            {/* Calendar Widget */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.7, ease: 'easeOut' }}
+              className="col-span-12 md:col-span-5"
+            >
+              <CalendarWidget applications={applications} />
             </motion.div>
 
             {/* Upcoming Interviews - Tall Card */}

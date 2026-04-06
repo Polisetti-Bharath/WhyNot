@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import {
   Briefcase,
   Users,
   TrendingUp,
-  Calendar,
   PlusCircle,
   Award,
-  Building2,
-  Target,
   ArrowRight,
-  BarChart3,
   Activity,
-  CheckCircle,
-  Clock,
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabaseClient';
 import PageTransition from '../components/common/PageTransition';
+import CalendarWidget from '../components/features/CalendarWidget';
 import { Link } from 'react-router-dom';
+import { Application } from '../types';
 
 const PlacementDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -30,15 +26,10 @@ const PlacementDashboard: React.FC = () => {
     totalStudents: 0,
     placedStudents: 0,
   });
+  const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    if (user?.id) {
-      fetchDashboardData();
-    }
-  }, [user?.id]);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     try {
       // Fetch opportunities stats
       const { data: opportunities } = await supabase
@@ -75,6 +66,8 @@ const PlacementDashboard: React.FC = () => {
         .select('*', { count: 'exact', head: true })
         .eq('status', 'ACCEPTED');
 
+      setApplications(applications as Application[]);
+
       setStats({
         totalOpportunities: opportunities?.length || 0,
         activeOpportunities: opportunities?.filter(o => o.status === 'active').length || 0,
@@ -88,7 +81,13 @@ const PlacementDashboard: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchDashboardData();
+    }
+  }, [user?.id, fetchDashboardData]);
 
   const statCards = [
     {
@@ -285,131 +284,75 @@ const PlacementDashboard: React.FC = () => {
           {/* Action Cards Grid */}
           <div className="grid grid-cols-12 gap-6">
             {/* Manage Opportunities */}
-            <div className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Link to="/placement/opportunities">
-                <motion.div whileHover={{ y: -4 }} className="relative group h-full">
-                  <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
-                  <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-purple-500/30 transition-all">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 p-[1px] flex-shrink-0">
-                        <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                          <Briefcase className="w-6 h-6 text-purple-400" />
+            <div className="col-span-12 md:col-span-7 lg:col-span-8 flex flex-col gap-6">
+              <div className="flex flex-col md:flex-row gap-6">
+                <Link to="/placement/opportunities" className="flex-1">
+                  <motion.div whileHover={{ y: -4 }} className="relative group h-full">
+                    <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
+                    <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-purple-500/30 transition-all">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 p-[1px] flex-shrink-0">
+                          <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
+                            <Briefcase className="w-6 h-6 text-purple-400" />
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-white mb-1">Manage Opportunities</h3>
-                        <p className="text-sm text-slate-400 mb-3">
-                          View, edit and track all job postings
-                        </p>
-                        <div className="flex items-center text-sm text-purple-400 font-semibold">
-                          View All{' '}
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              </Link>
-            </div>
-
-            {/* Quick Actions (replaced Calendar link logic to balance layout if needed or just empty) */}
-
-            {/* Profile */}
-            <div className="col-span-12 md:col-span-6 lg:col-span-4">
-              <Link to="/profile">
-                <motion.div whileHover={{ y: -4 }} className="relative group h-full">
-                  <div className="absolute -inset-[1px] bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
-                  <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-emerald-500/30 transition-all">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 p-[1px] flex-shrink-0">
-                        <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
-                          <Users className="w-6 h-6 text-emerald-400" />
-                        </div>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-bold text-white mb-1">My Profile</h3>
-                        <p className="text-sm text-slate-400 mb-3">
-                          View and update your information
-                        </p>
-                        <div className="flex items-center text-sm text-emerald-400 font-semibold">
-                          View Profile{' '}
-                          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-white mb-1">
+                            Manage Opportunities
+                          </h3>
+                          <p className="text-sm text-slate-400 mb-3">
+                            View, edit and track all job postings
+                          </p>
+                          <div className="flex items-center text-sm text-purple-400 font-semibold">
+                            View All{' '}
+                            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              </Link>
+                  </motion.div>
+                </Link>
+
+                <Link to="/placement/applications" className="flex-1">
+                  <motion.div whileHover={{ y: -4 }} className="relative group h-full">
+                    <div className="absolute -inset-[1px] bg-gradient-to-br from-purple-500 to-indigo-500 rounded-2xl opacity-0 group-hover:opacity-60 transition-opacity duration-300 blur" />
+                    <div className="relative glass-panel rounded-2xl p-6 h-full border border-white/10 hover:border-purple-500/30 transition-all">
+                      <div className="flex items-start gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 p-[1px] flex-shrink-0">
+                          <div className="w-full h-full rounded-[11px] bg-black flex items-center justify-center">
+                            <Users className="w-6 h-6 text-indigo-400" />
+                          </div>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-white mb-1">Manage Applications</h3>
+                          <p className="text-sm text-slate-400 mb-3">
+                            Review candidates and update statuses
+                          </p>
+                          <div className="flex items-center text-sm text-indigo-400 font-semibold">
+                            Review Now{' '}
+                            <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </Link>
+              </div>
             </div>
+
+            {/* Calendar Widget */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.7, ease: 'easeOut' }}
+              className="col-span-12 md:col-span-5 lg:col-span-4"
+            >
+              <CalendarWidget applications={applications} />
+            </motion.div>
           </div>
 
-          {/* Placement Progress Section */}
-          <div className="grid grid-cols-12 gap-6">
-            <div className="col-span-12">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.6 }}
-                className="glass-panel rounded-2xl p-8 border border-white/10 bg-gradient-to-br from-slate-900/80 to-purple-900/10"
-              >
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <h2 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">
-                      <Target className="w-6 h-6 text-emerald-400" />
-                      Placement Season Progress
-                    </h2>
-                    <p className="text-slate-400">Track overall placement success</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-4xl font-black bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                      {stats.totalStudents > 0
-                        ? Math.round((stats.placedStudents / stats.totalStudents) * 100)
-                        : 0}
-                      %
-                    </div>
-                    <p className="text-sm text-slate-400">Success Rate</p>
-                  </div>
-                </div>
-
-                <div className="relative h-4 bg-white/5 rounded-full overflow-hidden border border-white/5 mb-6">
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-500"
-                    initial={{ width: 0 }}
-                    animate={{
-                      width: `${stats.totalStudents > 0 ? (stats.placedStudents / stats.totalStudents) * 100 : 0}%`,
-                    }}
-                    transition={{ duration: 1, delay: 0.8, ease: 'easeOut' }}
-                  />
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-white/40 to-transparent"
-                    animate={{ x: ['-100%', '200%'] }}
-                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
-                  />
-                </div>
-
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center p-4 bg-white/5 rounded-xl border border-white/5">
-                    <p className="text-2xl font-bold text-white mb-1">{stats.totalStudents}</p>
-                    <p className="text-sm text-slate-400">Total Students</p>
-                  </div>
-                  <div className="text-center p-4 bg-emerald-500/10 rounded-xl border border-emerald-500/20">
-                    <p className="text-2xl font-bold text-emerald-400 mb-1">
-                      {stats.placedStudents}
-                    </p>
-                    <p className="text-sm text-slate-400">Placed</p>
-                  </div>
-                  <div className="text-center p-4 bg-white/5 rounded-xl border border-white/5">
-                    <p className="text-2xl font-bold text-slate-300 mb-1">
-                      {stats.totalStudents - stats.placedStudents}
-                    </p>
-                    <p className="text-sm text-slate-400">Remaining</p>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
           {loading && (
-            <div className="flex justify-center py-20">
+            <div className="flex justify-center py-20 pb-0">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
             </div>
           )}
