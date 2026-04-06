@@ -12,7 +12,7 @@ import {
   addDays,
 } from 'date-fns';
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, Video } from 'lucide-react';
-import { Application } from '../../types';
+import type { Application } from '../../types';
 
 interface CalendarWidgetProps {
   applications: Application[];
@@ -30,19 +30,21 @@ const CalendarWidget: React.FC<CalendarWidgetProps> = ({ applications }) => {
     const list: Array<{ date: Date; type: string; title: string; app: Application }> = [];
     applications.forEach(app => {
       // Applied date
-      list.push({
-        date: new Date(app.created_at),
-        type: 'applied',
-        title: `Applied: ${app.opportunity?.company_name || 'Company'}`,
-        app,
-      });
+      if (app.created_at) {
+        list.push({
+          date: new Date(app.created_at),
+          type: 'applied',
+          title: `Applied: ${app.opportunity?.company_name || app.opportunity?.title || 'Company'}`,
+          app,
+        });
+      }
 
       // Interview date
       if (app.status === 'INTERVIEW_SCHEDULED' && app.interview_date) {
         list.push({
           date: new Date(app.interview_date),
           type: 'interview',
-          title: `Interview: ${app.opportunity?.company_name || 'Company'}`,
+          title: `Interview: ${app.opportunity?.company_name || app.opportunity?.title || 'Company'}`,
           app,
         });
       }

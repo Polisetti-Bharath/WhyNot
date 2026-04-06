@@ -25,7 +25,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../services/supabaseClient';
-import { Application, JobOpportunity } from '../types';
+import type { Application, JobOpportunity } from '../types';
 import RejectionAnalysisHub from '../components/features/RejectionAnalysisHub';
 import CalendarWidget from '../components/features/CalendarWidget';
 import PageTransition from '../components/common/PageTransition';
@@ -172,7 +172,7 @@ const StudentDashboard: React.FC = () => {
     return {
       action,
       company: app.opportunity?.company_name || 'Unknown Company',
-      time: new Date(app.created_at).toLocaleDateString(),
+      time: app.created_at ? new Date(app.created_at).toLocaleDateString() : 'Unknown Date',
       icon,
     };
   });

@@ -14,7 +14,7 @@ import { supabase } from '../services/supabaseClient';
 import PageTransition from '../components/common/PageTransition';
 import CalendarWidget from '../components/features/CalendarWidget';
 import { Link } from 'react-router-dom';
-import { Application } from '../types';
+import type { Application } from '../types';
 
 const PlacementDashboard: React.FC = () => {
   const { user } = useAuth();
