@@ -21,6 +21,7 @@ const OpportunitiesPage = lazy(() => import('./pages/OpportunitiesPage'));
 const ExternalJobsPage = lazy(() => import('./pages/ExternalJobsPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
 const PlacementDashboard = lazy(() => import('./pages/PlacementDashboard'));
+const OffCampusDashboard = lazy(() => import('./pages/OffCampusDashboard'));
 const PostOpportunityPage = lazy(() => import('./pages/PostOpportunityPage'));
 const ManageOpportunitiesPage = lazy(() => import('./pages/ManageOpportunitiesPage'));
 const ResumeAnalyzerPage = lazy(() => import('./pages/ResumeAnalyzerPage'));
@@ -62,6 +63,8 @@ const App: React.FC = () => {
       return <Navigate to="/dashboard" replace />;
     } else if (user.role === UserRole.PLACEMENT_OFFICER) {
       return <Navigate to="/placement/dashboard" replace />;
+    } else if (user.role === UserRole.OFF_CAMPUS_STUDENT) {
+      return <Navigate to="/off-campus/dashboard" replace />;
     }
   }
 
@@ -130,10 +133,27 @@ const App: React.FC = () => {
                     }
                   />
 
+                  {/* Off-Campus Student Routes */}
+                  <Route
+                    path="/off-campus/dashboard"
+                    element={
+                      <ProtectedRoute
+                        userRole={user?.role}
+                        requiredRole={UserRole.OFF_CAMPUS_STUDENT}
+                      >
+                        <OffCampusDashboard />
+                      </ProtectedRoute>
+                    }
+                  />
+
+                  {/* Shared Routes (Internal Student & Off-Campus) */}
                   <Route
                     path="/external-jobs"
                     element={
-                      <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
+                      <ProtectedRoute
+                        userRole={user?.role}
+                        requiredRole={[UserRole.STUDENT, UserRole.OFF_CAMPUS_STUDENT]}
+                      >
                         <ExternalJobsPage />
                       </ProtectedRoute>
                     }
@@ -213,11 +233,14 @@ const App: React.FC = () => {
                     }
                   />
 
-                  {/* Career Path Simulator Route - accessible to students */}
+                  {/* Career Path Simulator Route - accessible to students and off-campus */}
                   <Route
                     path="/career-simulator"
                     element={
-                      <ProtectedRoute userRole={user?.role} requiredRole={UserRole.STUDENT}>
+                      <ProtectedRoute
+                        userRole={user?.role}
+                        requiredRole={[UserRole.STUDENT, UserRole.OFF_CAMPUS_STUDENT]}
+                      >
                         <CareerPathSimulatorPage />
                       </ProtectedRoute>
                     }

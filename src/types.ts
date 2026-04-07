@@ -25,11 +25,16 @@ export interface AuthUser {
   resume?: string;
   resume_url?: string;
   placementStatus?: 'unplaced' | 'placed' | 'in-process';
+
+  // Off-campus specific fields
+  universityName?: string;
+  graduationYear?: number;
 }
 
 export enum UserRole {
   STUDENT = 'STUDENT',
   PLACEMENT_OFFICER = 'PLACEMENT_OFFICER',
+  OFF_CAMPUS_STUDENT = 'OFF_CAMPUS_STUDENT',
 }
 
 export enum OpportunityType {
@@ -82,6 +87,25 @@ export interface PlacementOfficerProfile {
   role: UserRole.PLACEMENT_OFFICER;
   managedDepartments: string[];
   yearsOfExperience: number;
+  avatar?: string;
+}
+
+export interface OffCampusProfile {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  universityName: string;
+  graduationYear: number;
+  major: string;
+  cgpa?: number;
+  skills: Skill[];
+  resume?: string;
+  preferences: {
+    industries: string[];
+    locations: string[];
+    opportunityTypes: OpportunityType[];
+  };
   avatar?: string;
 }
 

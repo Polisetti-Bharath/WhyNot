@@ -64,6 +64,13 @@ const Header: React.FC<HeaderProps> = ({
           { label: 'Opportunities', path: '/placement/opportunities', icon: Briefcase },
         ];
 
+      case UserRole.OFF_CAMPUS_STUDENT:
+        return [
+          { label: 'Dashboard', path: '/off-campus/dashboard', icon: Home },
+          { label: 'External Jobs', path: '/external-jobs', icon: ExternalLink },
+          { label: 'Resume AI', path: '/resume-analyzer', icon: BarChart3 },
+        ];
+
       default:
         return [];
     }

@@ -188,7 +188,9 @@ const SignupPage: React.FC = () => {
               if (formData.role === UserRole.STUDENT) {
                 navigate('/dashboard');
               } else if (formData.role === UserRole.PLACEMENT_OFFICER) {
-                navigate('/placement-dashboard');
+                navigate('/placement/dashboard');
+              } else if (formData.role === UserRole.OFF_CAMPUS_STUDENT) {
+                navigate('/off-campus/dashboard');
               } else {
                 navigate('/dashboard');
               }
@@ -237,6 +239,12 @@ const SignupPage: React.FC = () => {
       label: 'Placement Officer',
       icon: Building,
       description: 'Manage campus placements',
+    },
+    {
+      value: UserRole.OFF_CAMPUS_STUDENT,
+      label: 'Off-Campus',
+      icon: UserPlus,
+      description: 'Independent job seeker',
     },
   ];
 
@@ -360,7 +368,7 @@ const SignupPage: React.FC = () => {
                 transition={{ duration: 0.4, delay: 0.3, ease: 'easeOut' }}
               >
                 <label className="block text-sm font-medium text-slate-300 mb-3">I am a...</label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                   {roleOptions.map((option, index) => {
                     const Icon = option.icon;
                     return (
@@ -574,8 +582,9 @@ const SignupPage: React.FC = () => {
                 </motion.div>
               </motion.div>
 
-              {/* Department - Only for Students */}
-              {formData.role === UserRole.STUDENT && (
+              {/* Department - For Internal and Off-Campus Students */}
+              {(formData.role === UserRole.STUDENT ||
+                formData.role === UserRole.OFF_CAMPUS_STUDENT) && (
                 <motion.div
                   initial={{ opacity: 0, x: -20, y: 10 }}
                   animate={{ opacity: 1, x: 0, y: 0 }}
@@ -593,7 +602,10 @@ const SignupPage: React.FC = () => {
                     whileTap={{ scale: 0.99 }}
                     id="department"
                     name="department"
-                    required={formData.role === UserRole.STUDENT}
+                    required={
+                      formData.role === UserRole.STUDENT ||
+                      formData.role === UserRole.OFF_CAMPUS_STUDENT
+                    }
                     value={formData.department}
                     onChange={handleChange}
                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all [&>option]:bg-slate-900 [&>option:checked]:bg-purple-500/20"

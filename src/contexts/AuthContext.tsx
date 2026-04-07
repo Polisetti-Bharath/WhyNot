@@ -105,6 +105,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           cgpa: data.cgpa,
           skills: data.skills,
           preferences: data.preferences,
+          universityName: data.universityName,
+          graduationYear: data.graduationYear,
         });
       } else {
         // If no profile data, we don't sign out immediately to allow for profile creation/recovery

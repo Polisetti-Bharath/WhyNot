@@ -119,6 +119,41 @@ const Sidebar: React.FC<SidebarProps> = ({ userRole, userName = 'Guest', userAva
           },
         ];
 
+      case UserRole.OFF_CAMPUS_STUDENT:
+        return [
+          {
+            label: 'Dashboard',
+            path: '/off-campus/dashboard',
+            icon: Home,
+            gradient: 'from-cyan-400 to-blue-500',
+          },
+          {
+            label: 'External Jobs',
+            path: '/external-jobs',
+            icon: ExternalLink,
+            gradient: 'from-blue-400 to-cyan-500',
+          },
+          {
+            label: 'Career Simulator',
+            path: '/career-simulator',
+            icon: TrendingUp,
+            gradient: 'from-purple-400 to-indigo-500',
+            badge: 'NEW',
+          },
+          {
+            label: 'Resume AI',
+            path: '/resume-analyzer',
+            icon: BarChart3,
+            gradient: 'from-yellow-400 to-orange-500',
+          },
+          {
+            label: 'Profile',
+            path: '/profile',
+            icon: Users,
+            gradient: 'from-indigo-400 to-purple-500',
+          },
+        ];
+
       default:
         return [];
     }
