@@ -23,7 +23,7 @@ export const api = {
 
       // Fetch student profile separately if needed
       let studentData = {};
-      if (profile.role === 'STUDENT') {
+      if (profile.role === 'STUDENT' || profile.role === 'OFF_CAMPUS_STUDENT') {
         const { data: studentProfiles, error: studentError } = await supabase
           .from('student_profiles')
           .select('*')
@@ -43,7 +43,14 @@ export const api = {
 
   async updateStudentProfile(userId: string, data: any) {
     // Split data into profile and student_profile fields
-    const profileFields = ['name', 'department', 'phone', 'avatar'];
+    const profileFields = [
+      'name',
+      'department',
+      'phone',
+      'avatar',
+      'university_name',
+      'graduation_year',
+    ];
     const studentFields = ['major', 'year', 'semester', 'cgpa', 'skills', 'preferences'];
 
     const profileData: any = {};
